@@ -6,7 +6,7 @@ const {
 } = window.MOV;
 const { MvSheet, MvSheetOverShell, MvSeg } = window.MOVS;
 
-const MW = 1280, MPHONE = 390;
+const MW = 1200, MPHONE = 390;
 
 /* moldura neutra com caption (igual ao produtos/equipe canvas) */
 function MFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, toast }) {
@@ -68,6 +68,9 @@ function MovCanvas() {
         </DCArtboard>
         <DCArtboard id="hist-desk" label="Histórico · Desktop · Owner/Manager" width={MW} height={720}>
           <MvHistoryShell scenario="base" />
+        </DCArtboard>
+        <DCArtboard id="hist-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={MW} height={720}>
+          <MvHistoryShell scenario="base" collapsed />
         </DCArtboard>
         <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={440} height={720}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 12, justifyContent: "center" }}>

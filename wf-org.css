@@ -5,6 +5,10 @@
 
 /* coluna centralizada da tela /configuracoes */
 .org-col { width: 100%; max-width: 820px; margin: 0 auto; }
+/* sidebar recolhida: o inset ganha 208px (256→48); o wrap cresce o mesmo tanto
+   (820→1028) mantendo o mesmo espaçamento lateral da tela com a sidebar aberta.
+   width explícito porque % se resolve de forma inconsistente dentro do flex-column. */
+.org-shell-collapsed .org-col { width: 1028px; min-width: 1028px; max-width: none; }
 .org-headrow { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .org-head-sub { font-size: 13px; color: var(--wf-muted); margin: 4px 0 0; }
 
@@ -48,6 +52,13 @@
 /* ── bloco somente leitura (identidade fiscal · bg-muted) ── */
 .org-readonly { margin-top: 16px; background: var(--wf-fieldbg); border: 1.5px solid var(--wf-line-soft); border-radius: var(--wf-radius); padding: 14px 16px; }
 .org-readonly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 22px; }
+/* mobile: identidade fiscal empilhada na vertical (coluna única) */
+.sh-mobile .org-readonly-grid { grid-template-columns: 1fr; gap: 13px; }
+/* mobile: a coluna preenche a largura da tela (sem o max-width de 820 que estourava).
+   o container é bloco para o width:100% resolver de forma confiável (o flex-column
+   fazia o item assumir max-content e estourar a tela). */
+.org-mobile-main { display: block; }
+.sh-mobile .org-col { width: 100%; max-width: 100%; min-width: 0; margin: 0; }
 .org-ro-item { min-width: 0; }
 .org-ro-label { font-size: 10.5px; font-family: var(--wf-mono); letter-spacing: .4px; text-transform: uppercase; color: var(--wf-faint); }
 .org-ro-value { font-size: 13px; color: var(--wf-ink); font-weight: 500; margin-top: 2px; }
@@ -60,6 +71,10 @@
 .org-span-3 { grid-column: span 3; }
 .org-span-4 { grid-column: span 4; }
 .org-span-6 { grid-column: span 6; }
+
+/* mobile: CEP ocupa a 1ª linha inteira, Logradouro a 2ª linha inteira */
+.sh-mobile .org-addr-cep,
+.sh-mobile .org-addr-log { grid-column: span 6; }
 
 /* ── horários ─────────────────────────────────────────── */
 .org-hours { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }

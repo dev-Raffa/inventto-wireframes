@@ -5,7 +5,7 @@ const {
   EqSheet, EqSheetOverShell, EqBadge, EQ_I,
 } = window.EQ;
 
-const EW = 1340, EPHONE = 390;
+const EW = 1200, EPHONE = 390;
 
 /* moldura neutra com caption (igual ao org/shell canvas) */
 function EFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, toast }) {
@@ -56,6 +56,9 @@ function EqCanvas() {
         </DCArtboard>
         <DCArtboard id="list-desk" label="Lista de membros · Desktop · estado base" width={EW} height={760}>
           <EqListShell scenario="base" />
+        </DCArtboard>
+        <DCArtboard id="list-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={EW} height={760}>
+          <EqListShell scenario="base" collapsed />
         </DCArtboard>
         <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={420} height={760}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 13, justifyContent: "center" }}>

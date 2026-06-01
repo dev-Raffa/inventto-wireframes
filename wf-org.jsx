@@ -7,15 +7,15 @@ const { Sidebar, TopHeader, SH_I, WSwitch } = window.SH;
 /* ícones locais (lucide-like, 1.5 stroke) que faltam no kit */
 const oic = (p) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{p}</svg>;
 const ORG_I = {
-  upload: oic(<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M12 3v13M7 8l5-5 5 5"/></>),
-  clock: oic(<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>),
-  alert: oic(<><path d="M12 9v4m0 4h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></>),
-  circlex: oic(<><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></>),
-  sliders: oic(<><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="9" cy="8" r="2.4"/><circle cx="15" cy="16" r="2.4"/></>),
-  save: oic(<><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></>),
-  discard: oic(<><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></>),
-  lock: oic(<><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></>),
-  dot: <svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2.4" fill="currentColor"/></svg>,
+  upload: oic(<><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M12 3v13M7 8l5-5 5 5" /></>),
+  clock: oic(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+  alert: oic(<><path d="M12 9v4m0 4h.01" /><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" /></>),
+  circlex: oic(<><circle cx="12" cy="12" r="9" /><path d="m15 9-6 6M9 9l6 6" /></>),
+  sliders: oic(<><line x1="4" y1="8" x2="20" y2="8" /><line x1="4" y1="16" x2="20" y2="16" /><circle cx="9" cy="8" r="2.4" /><circle cx="15" cy="16" r="2.4" /></>),
+  save: oic(<><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" /><path d="M17 21v-8H7v8M7 3v5h8" /></>),
+  discard: oic(<><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></>),
+  lock: oic(<><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></>),
+  dot: <svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2.4" fill="currentColor" /></svg>
 };
 
 const ORG_NAME = "Ateliê Joana";
@@ -23,20 +23,20 @@ const ORG_NAME = "Ateliê Joana";
 /* ════ TABS ════════════════════════════════════════════ */
 function OrgTabs({ active = "loja" }) {
   const tabs = [
-    ["loja", "Loja", SH_I.store],
-    ["op", "Operacional", ORG_I.sliders],
-    ["horarios", "Horários", ORG_I.clock],
-    ["danger", "Danger Zone", ORG_I.alert],
-  ];
+  ["loja", "Loja", SH_I.store],
+  ["op", "Operacional", ORG_I.sliders],
+  ["horarios", "Horários", ORG_I.clock],
+  ["danger", "Danger Zone", ORG_I.alert]];
+
   return (
     <div className="org-tabs">
-      {tabs.map(([id, label, icon]) => (
-        <div key={id} className={["org-tab", id === active ? "is-active" : "", id === "danger" ? "is-danger" : ""].join(" ")}>
+      {tabs.map(([id, label, icon]) =>
+      <div key={id} className={["org-tab", id === active ? "is-active" : "", id === "danger" ? "is-danger" : ""].join(" ")}>
           <span className="org-tab-ico">{icon}</span>{label}
         </div>
-      ))}
-    </div>
-  );
+      )}
+    </div>);
+
 }
 
 /* ════ ABA: LOJA ═══════════════════════════════════════ */
@@ -80,13 +80,13 @@ function TabLoja({ cepError, uploading }) {
       {/* endereço (RN024) */}
       <div className="wf-field"><span className="wf-label">Endereço</span></div>
       <div className="org-addr-grid">
-        <div className="org-span-2">
+        <div className="org-span-2 org-addr-cep">
           <WField label="CEP">
             <WInput value={cepError ? "00000-000" : "01310-100"} mono error={cepError}
-              trail={uploading ? null : (cepError ? null : ORG_I.dot)} />
+            trail={uploading ? null : cepError ? null : ORG_I.dot} />
           </WField>
         </div>
-        <div className="org-span-4">
+        <div className="org-span-4 org-addr-log">
           <WField label="Logradouro"><WInput value={cepError ? "" : "Av. Paulista"} placeholder="Preencha o endereço" /></WField>
         </div>
         <div className="org-span-2">
@@ -106,8 +106,8 @@ function TabLoja({ cepError, uploading }) {
         </div>
       </div>
       {cepError && <WError>CEP não encontrado. Preencha o endereço manualmente.</WError>}
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ ABA: OPERACIONAL ════════════════════════════════ */
@@ -124,42 +124,42 @@ function TabOperacional() {
         </span>
         <WSwitch on />
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ ABA: HORÁRIOS ═══════════════════════════════════ */
 function TabHorarios() {
   const days = [
-    ["Segunda", true, "09:00", "18:00"],
-    ["Terça", true, "09:00", "18:00"],
-    ["Quarta", true, "09:00", "18:00"],
-    ["Quinta", true, "09:00", "18:00"],
-    ["Sexta", true, "09:00", "18:00"],
-    ["Sábado", true, "09:00", "13:00"],
-    ["Domingo", false, "", ""],
-  ];
+  ["Segunda", true, "09:00", "18:00"],
+  ["Terça", true, "09:00", "18:00"],
+  ["Quarta", true, "09:00", "18:00"],
+  ["Quinta", true, "09:00", "18:00"],
+  ["Sexta", true, "09:00", "18:00"],
+  ["Sábado", true, "09:00", "13:00"],
+  ["Domingo", false, "", ""]];
+
   return (
     <div className="org-tabpanel">
       <WHelper style={{ marginTop: 0 }}>Os horários controlam o status da vitrine para os clientes.</WHelper>
       <div className="org-hours">
-        {days.map(([day, on, open, close]) => (
-          <div className="org-hour-row" key={day}>
+        {days.map(([day, on, open, close]) =>
+        <div className="org-hour-row" key={day}>
             <span className="org-hour-day"><WSwitch on={on} />{day}</span>
-            {on ? (
-              <span className="org-hour-times">
+            {on ?
+          <span className="org-hour-times">
                 <span style={{ flex: "0 0 96px" }}><WInput value={open} mono /></span>
                 <span className="org-hour-dash">até</span>
                 <span style={{ flex: "0 0 96px" }}><WInput value={close} mono /></span>
-              </span>
-            ) : (
-              <span className="org-hour-closed">Fechado</span>
-            )}
+              </span> :
+
+          <span className="org-hour-closed">Fechado</span>
+          }
           </div>
-        ))}
+        )}
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ ABA: DANGER ZONE ════════════════════════════════ */
@@ -184,8 +184,8 @@ function TabDanger() {
           <span className="org-danger-btn is-solid">Excluir</span>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ Ações no topo (descartar + salvar) ═════════════ */
@@ -197,8 +197,8 @@ function OrgHeaderActions({ saving, uploading, compact }) {
         <span className={["org-iconbtn", "is-primary", uploading ? "is-disabled" : ""].join(" ")} aria-label="Salvar alterações">
           {saving ? <span className="wf-spin" /> : ORG_I.save}
         </span>
-      </span>
-    );
+      </span>);
+
   }
   return (
     <span className="org-head-actions">
@@ -206,8 +206,8 @@ function OrgHeaderActions({ saving, uploading, compact }) {
       <WBtn loading={saving} disabled={uploading}>
         {saving ? "Salvando…" : <><span className="org-save-ico">{ORG_I.save}</span>Salvar alterações</>}
       </WBtn>
-    </span>
-  );
+    </span>);
+
 }
 
 /* ════ Conteúdo da tela /configuracoes ═════════════════ */
@@ -215,7 +215,7 @@ function OrgConfig({ tab = "loja", pending, saving, cepError, uploading, compact
   const showActions = (pending || saving) && tab !== "danger";
   const actions = showActions ? <OrgHeaderActions saving={saving} uploading={uploading} compact={compact} /> : null;
   return (
-    <div className="org-col">
+    <div className="org-col" style={{ width: "960px" }}>
       <div className="org-headrow">
         <div>
           <h1 className="wf-h1" style={{ fontSize: 27 }}>Configurações</h1>
@@ -231,23 +231,23 @@ function OrgConfig({ tab = "loja", pending, saving, cepError, uploading, compact
       {tab === "op" && <TabOperacional />}
       {tab === "horarios" && <TabHorarios />}
       {tab === "danger" && <TabDanger />}
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ Shell completa com a tela montada (desktop) ═════ */
-function OrgConfigShell({ tab = "loja", pending, saving, cepError, uploading }) {
+function OrgConfigShell({ tab = "loja", pending, saving, cepError, uploading, collapsed }) {
   return (
-    <div className="wf sh-app">
-      <Sidebar role="owner" active="org" />
+    <div className={["wf sh-app", collapsed ? "org-shell-collapsed" : ""].join(" ")} style={{ width: "1200px" }}>
+      <Sidebar role="owner" active="org" collapsed={collapsed} />
       <div className="sh-inset">
         <TopHeader crumb={["Início", "Configurações"]} notif={false} />
-        <div className="sh-main" style={{ overflow: "auto", paddingLeft: 18, paddingRight: 18 }}>
+        <div className="sh-main" style={{ overflow: "auto", paddingLeft: 18, paddingRight: 18, padding: "26px 0px" }}>
           <OrgConfig tab={tab} pending={pending} saving={saving} cepError={cepError} uploading={uploading} />
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ Shell mobile ════════════════════════════════════ */
@@ -262,11 +262,11 @@ function OrgConfigMobile({ tab = "loja", pending }) {
           <div className="sh-iconbtn">{SH_I.bell}</div><span className="sh-avatar">JR</span>
         </div>
       </div>
-      <div className="sh-mobile-main" style={{ overflow: "auto", background: "var(--wf-field)", padding: 18 }}>
+      <div className="sh-mobile-main org-mobile-main" style={{ overflow: "auto", background: "var(--wf-field)", padding: 18 }}>
         <OrgConfig tab={tab} pending={pending} compact />
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ Skeleton (carregando) ═══════════════════════════ */
@@ -285,14 +285,14 @@ function OrgConfigLoading() {
           <div className="wf-sk" style={{ width: 200, height: 9, marginTop: 8 }} />
         </div>
       </div>
-      {[0, 1, 2].map((i) => (
-        <div key={i} style={{ marginTop: 20 }}>
+      {[0, 1, 2].map((i) =>
+      <div key={i} style={{ marginTop: 20 }}>
           <div className="wf-sk" style={{ width: 90, height: 10 }} />
           <div className="wf-sk" style={{ width: "100%", height: 42, marginTop: 7, borderRadius: 9 }} />
         </div>
-      ))}
-    </div>
-  );
+      )}
+    </div>);
+
 }
 
 /* ════ MODAL 2.1.2 — Desativar organização ═════════════ */
@@ -312,8 +312,8 @@ function DeactivateOrgDialog({ executing }) {
         <div style={{ flex: 1 }}><WBtn variant="outline">Cancelar</WBtn></div>
         <div style={{ flex: 1 }}><WBtn variant="destructive" loading={executing}>{executing ? "Desativando…" : "Desativar"}</WBtn></div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* ════ MODAL 2.1.3 — Excluir organização ═══════════════
@@ -340,14 +340,14 @@ function DeleteOrgDialog({ match = "empty", purge, executing }) {
         <div style={{ flex: 1 }}><WBtn variant="outline">Cancelar</WBtn></div>
         <div style={{ flex: 1 }}><WBtn variant="destructive" disabled={!enabled} loading={executing}>{executing ? "Excluindo…" : "Excluir organização"}</WBtn></div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 Object.assign(window, {
   ORG: {
     ORG_I, ORG_NAME, OrgTabs, TabLoja, TabOperacional, TabHorarios, TabDanger,
     OrgHeaderActions, OrgConfig, OrgConfigShell, OrgConfigMobile, OrgConfigLoading,
-    DeactivateOrgDialog, DeleteOrgDialog,
-  },
+    DeactivateOrgDialog, DeleteOrgDialog
+  }
 });

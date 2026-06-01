@@ -99,6 +99,9 @@ function MvFilters({ term, role = "owner", typeVal, reasonVal }) {
       <span className="mv-filter"><MvSelect value={reasonVal || "Todos os motivos"} /></span>
       <span className="mv-filter is-date"><MvSelect value="Período: 30 dias" icon={MOV_I.calendar} /></span>
       {role !== "sales" && <span className="mv-filter"><MvSelect value="Responsável" placeholder="Responsável" /></span>}
+      {role !== "sales" && (
+        <span className="mv-filter-cta"><WBtn><span className="mv-ico">{MOV_I.plus}</span>Registrar movimentação</WBtn></span>
+      )}
     </div>
   );
 }
@@ -163,9 +166,6 @@ function MvHead({ role }) {
         <h1 className="wf-h1" style={{ fontSize: 27 }}>Movimentações</h1>
         <p className="mv-head-sub">Histórico cronológico e auditável de entradas e saídas de estoque. Registros são imutáveis.</p>
       </div>
-      {role !== "sales" && (
-        <span className="mv-head-cta"><WBtn><span className="mv-ico">{MOV_I.plus}</span>Registrar movimentação</WBtn></span>
-      )}
     </div>
   );
 }
@@ -225,13 +225,13 @@ function MvHistory({ scenario = "base", role = "owner" }) {
 }
 
 /* ── shell completa (desktop) ─────────────────────────── */
-function MvHistoryShell({ scenario, role = "owner" }) {
+function MvHistoryShell({ scenario, role = "owner", collapsed }) {
   return (
-    <div className="wf sh-app">
-      <Sidebar role={role} active="mov" />
+    <div className={["wf sh-app", collapsed ? "mv-shell-collapsed" : ""].join(" ")} style={{ width: "1200px" }}>
+      <Sidebar role={role} active="mov" collapsed={collapsed} />
       <div className="sh-inset">
         <TopHeader crumb={["Início", "Movimentações"]} notif={false} />
-        <div className="sh-main" style={{ overflow: "auto", paddingLeft: 20, paddingRight: 20 }}>
+        <div className="sh-main" style={{ overflow: "auto" }}>
           <MvHistory scenario={scenario} role={role} />
         </div>
       </div>

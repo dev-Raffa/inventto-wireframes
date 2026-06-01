@@ -3,7 +3,7 @@
 const {
   Sidebar, OrgTrigger, NavItem, TopHeader, AppShell, MobileShell,
   OrgPopover, CreateOrgDialog, UserNavTrigger, UserNavMenu, AvatarDialog, PasswordDialog,
-  NotifPanel, Conta, GlobalState, WSwitch, SH_I,
+  NotifPanel, Conta, GlobalState, WSwitch, SH_I, SHToast, ToastStack, TOAST_TYPES,
 } = window.SH;
 
 const SW_DESK = 1200, SW_PHONE = 390;
@@ -80,8 +80,45 @@ function ShellCanvas() {
         </DCArtboard>
       </DCSection>
 
+      {/* ───── SIDEBAR RECOLHIDA ───── */}
+      <DCSection id="recolhida" title="02 · Sidebar recolhida (collapsible=icon)" subtitle="Rail de ícones w-[--sidebar-width-icon] (3rem) · acionada pelo SidebarTrigger no TopBar · estado persistido em cookie sidebar_state">
+        <DCArtboard id="rec-expanded" label="Expandida (w-64) · referência" width={SW_DESK} height={680}>
+          <AppShell role="owner" active="produtos" crumb={["Início", "Produtos"]} />
+        </DCArtboard>
+        <DCArtboard id="rec-collapsed" label="Recolhida (w-[--sidebar-width-icon]) · Owner" width={SW_DESK} height={680}>
+          <AppShell role="owner" active="produtos" crumb={["Início", "Produtos"]} collapsed />
+        </DCArtboard>
+        <DCArtboard id="rec-rail" label="Rail · só ícones + tooltip no hover" width={260} height={560}>
+          <div className="wf" style={{ height: "100%", display: "flex", background: "var(--wf-appbg)" }}>
+            <Sidebar role="owner" active="produtos" collapsed tipFor="produtos" />
+          </div>
+        </DCArtboard>
+        <DCArtboard id="rec-trigger" label="SidebarTrigger · posição inalterada" width={420} height={560}>
+          <Frame tone="empty" name="O mesmo botão no TopBar alterna ambos os estados" refLabel="SidebarTrigger · SidebarInset" center>
+            <div style={{ width: 300, display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div className="sh-iconbtn" style={{ background: "var(--wf-fieldbg)", boxShadow: "0 0 0 2px var(--wf-ink)" }}>{SH_I.menu}</div>
+                <span className="sh-vsep" />
+                <div className="sh-crumb"><span className="sh-crumb-i is-current">Produtos</span></div>
+              </div>
+              <WNote><b>Acionamento.</b> O <b>SidebarTrigger</b> vive no header do <b>SidebarInset</b> (TopBar) e mantém a <b>mesma posição</b> nos dois estados — expandido e recolhido. Um clique alterna entre <b>w-64</b> e <b>w-[--sidebar-width-icon]</b>.</WNote>
+              <WNote><b>Persistência.</b> A preferência é gravada no cookie <b>sidebar_state</b> e <b>restaurada no próximo acesso</b> — o painel volta no mesmo estado em que foi deixado.</WNote>
+            </div>
+          </Frame>
+        </DCArtboard>
+        <DCArtboard id="rec-nota" label="O que muda ao recolher" width={420} height={680}>
+          <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 13, justifyContent: "center" }}>
+            <WNote><b>Largura.</b> O rail assume <b>w-[--sidebar-width-icon]</b> (3rem · 48px), definido pelo token <b>SIDEBAR_WIDTH_ICON</b>.</WNote>
+            <WNote><b>Header.</b> Exibe apenas o <b>logotipo da marca</b>; a wordmark “Inventto” é ocultada com <b>group-data-[collapsible=icon]:hidden</b>.</WNote>
+            <WNote><b>Org Switcher.</b> Só o <b>avatar/inicial</b> da org ativa — sem nome, papel ou <b>ChevronsUpDown</b>.</WNote>
+            <WNote><b>Navegação.</b> Apenas <b>ícones centrados</b>; labels e rótulos de grupo somem. O <b>tooltip</b> revela o label no hover.</WNote>
+            <WNote><b>Item ativo.</b> Mantém o destaque (<b>--sidebar-accent</b>) sob o ícone — visível mesmo recolhido.</WNote>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
       {/* ───── MOBILE ───── */}
-      <DCSection id="mobile" title="02 · App Shell · Mobile" subtitle="TopBar (h-14) + conteúdo; sidebar como drawer (Sheet) via hambúrguer">
+      <DCSection id="mobile" title="03 · App Shell · Mobile" subtitle="TopBar (h-14) + conteúdo; sidebar como drawer (Sheet) via hambúrguer">
         <DCArtboard id="mob-closed" label="Mobile · navegação fechada" width={SW_PHONE} height={720}>
           <MobileShell />
         </DCArtboard>
@@ -91,7 +128,7 @@ function ShellCanvas() {
       </DCSection>
 
       {/* ───── ORG SWITCHER ───── */}
-      <DCSection id="org" title="03 · Seletor / troca de organização" subtitle="Topo da sidebar · troca sem recarregar · lembra a última ativa — RF008, RN010, RN011">
+      <DCSection id="org" title="04 · Seletor / troca de organização" subtitle="Topo da sidebar · troca sem recarregar · lembra a última ativa — RF008, RN010, RN011">
         <DCArtboard id="org-pop" label="Popover aberto · Owner" width={420} height={500}>
           <Frame tone="empty" name="Lista + busca + Criar organização (Owner)" refLabel="RF008 · RF006">
             <div style={{ width: 264 }}>
@@ -128,7 +165,7 @@ function ShellCanvas() {
       </DCSection>
 
       {/* ───── DIALOG CRIAR ORG ───── */}
-      <DCSection id="createorg" title="04 · Dialog: criar organização" subtitle="Owner cria nova unidade sem sair do contexto · replicação opcional — RF006, RF009, RN020">
+      <DCSection id="createorg" title="05 · Dialog: criar organização" subtitle="Owner cria nova unidade sem sair do contexto · replicação opcional — RF006, RF009, RN020">
         <DCArtboard id="create-base" label="Base" width={520} height={520}>
           <Frame tone="empty" name="Nova organização" refLabel="RF006" center><CreateOrgDialog /></Frame>
         </DCArtboard>
@@ -138,7 +175,7 @@ function ShellCanvas() {
       </DCSection>
 
       {/* ───── USERNAV + NOTIFICAÇÕES ───── */}
-      <DCSection id="usernotif" title="05 · UserNav & Notificações" subtitle="Lado direito do header — perfil, logout e central de alertas in-app — RF035, RF002">
+      <DCSection id="usernotif" title="06 · UserNav & Notificações" subtitle="Lado direito do header — perfil, logout e central de alertas in-app — RF035, RF002">
         <DCArtboard id="usernav" label="UserNav · trigger + dropdown" width={420} height={440}>
           <Frame tone="empty" name="Trigger composto → menu" refLabel="RF002 · RF004">
             <div style={{ width: 168, display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 6 }}>
@@ -164,35 +201,6 @@ function ShellCanvas() {
         </DCArtboard>
         <DCArtboard id="notif-empty" label="Notificações · vazio" width={420} height={300}>
           <Frame tone="empty" name="Sem novidades" refLabel="RF035" center><NotifPanel empty /></Frame>
-        </DCArtboard>
-      </DCSection>
-
-      {/* ───── CONTA E PERFIL ───── */}
-      <DCSection id="conta" title="06 · Conta e perfil" subtitle="/conta · dados pessoais + logout · idêntica para todos os papéis — RF002">
-        <DCArtboard id="conta-desk" label="Desktop (coluna centralizada)" width={SW_DESK} height={720}>
-          <div className="wf sh-app">
-            <Sidebar role="owner" active="" orgStatic={false} />
-            <div className="sh-inset">
-              <TopHeader crumb={["Início", "Minha conta"]} notif={false} />
-              <div className="sh-main" style={{ overflow: "auto" }}>
-                <div style={{ maxWidth: 560, margin: "0 auto", width: "100%" }}><Conta /></div>
-              </div>
-            </div>
-          </div>
-        </DCArtboard>
-        <DCArtboard id="conta-mob" label="Mobile" width={SW_PHONE} height={760}>
-          <div className="wf sh-mobile">
-            <div className="sh-topbar">
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}><div className="sh-iconbtn">{SH_I.menu}</div><WLogo /></div>
-              <div style={{ display: "flex", alignItems: "center", gap: 4 }}><div className="sh-iconbtn">{SH_I.bell}</div><span className="sh-avatar">JR</span></div>
-            </div>
-            <div className="sh-mobile-main" style={{ overflow: "auto", background: "var(--wf-field)" }}><Conta /></div>
-          </div>
-        </DCArtboard>
-        <DCArtboard id="conta-saving" label="Salvando alterações" width={440} height={620}>
-          <Frame tone="load" name="Salvando… (CTA em progresso)" refLabel="RF002" center={false}>
-            <div style={{ width: "100%", maxWidth: 380 }}><Conta saving /></div>
-          </Frame>
         </DCArtboard>
       </DCSection>
 
@@ -235,7 +243,108 @@ function ShellCanvas() {
         </DCArtboard>
       </DCSection>
 
+      {/* ───── TOASTS ───── */}
+      <DCSection id="toasts" title="08 · Toasts (feedback efêmero)" subtitle="Disparados pelo MutationCache e por eventos do sistema · canto inferior direito · mesma anatomia, variam cor/ícone/tempo de vida">
+
+        <DCArtboard id="toast-anatomia" label="Anatomia base" width={560} height={420}>
+          <Frame tone="empty" name="Ícone · mensagem (text-sm) · ação ghost opcional · fechar (X)" refLabel="shadow-md ↓" center>
+            <div style={{ width: 380, display: "flex", flexDirection: "column", gap: 20 }}>
+              <SHToast type="info" action="Ver produtos">Estoque baixo em 3 produtos.</SHToast>
+              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                <WNote><b>Ícone (esq.).</b> Diferencia o tipo de imediato — um por categoria.</WNote>
+                <WNote><b>Mensagem.</b> Texto curto em <b>text-sm</b>; sem título separado.</WNote>
+                <WNote><b>Ação (opcional).</b> <b>Button ghost</b> à direita, só quando há próximo passo relevante.</WNote>
+                <WNote><b>Fechar.</b> <b>Button icon-only</b> com X — sempre presente e acessível via teclado.</WNote>
+                <WNote><b>Elevação.</b> <b>shadow-md</b> direcionada para baixo, reforçando a camada flutuante.</WNote>
+              </div>
+            </div>
+          </Frame>
+        </DCArtboard>
+
+        <DCArtboard id="toast-tipos" label="Os 4 tipos" width={480} height={420}>
+          <Frame tone="empty" name="Sucesso · Informativo · Alerta · Erro" refLabel="cor + ícone + TTL" center>
+            <div style={{ width: 380, display: "flex", flexDirection: "column", gap: 12 }}>
+              <SHToast type="success">Produto salvo com sucesso.</SHToast>
+              <SHToast type="info" action="Entrar">Sua sessão expirou.</SHToast>
+              <SHToast type="warning" action="Tentar de novo">Não foi possível trocar de organização.</SHToast>
+              <SHToast type="error" action="Tentar de novo">Falha ao salvar o produto.</SHToast>
+            </div>
+          </Frame>
+        </DCArtboard>
+
+        <DCArtboard id="toast-tabela" label="Tabela de tipos" width={560} height={420}>
+          <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <table className="sh-toasttable">
+              <thead>
+                <tr><th>Tipo</th><th>Ícone</th><th>Token de cor</th><th>Auto-dismiss</th></tr>
+              </thead>
+              <tbody>
+                {["success", "info", "warning", "error"].map((k) => {
+                  const t = TOAST_TYPES[k];
+                  return (
+                    <tr key={k}>
+                      <td><span className="sh-tt-name">{t.label}</span></td>
+                      <td><span className="sh-tt-ico" style={{ color: t.color, background: t.bg }}>{SH_I[t.icon]}</span></td>
+                      <td><span className="sh-tt-token">{t.token}</span></td>
+                      <td><span className="sh-tt-ttl">{t.ttl}</span></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            <p className="wf-helper" style={{ marginTop: 14 }}>A largura da barra inferior de cada toast acompanha o tempo de vida — quanto maior o TTL, mais cheia ela inicia.</p>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="toast-stack" label="Empilhamento · canto inferior direito" width={SW_DESK} height={620}>
+          <div className="wf sh-app" style={{ position: "relative" }}>
+            <Sidebar role="owner" active="produtos" collapsed />
+            <div className="sh-inset">
+              <TopHeader crumb={["Início", "Produtos"]} />
+              <div className="sh-main"><ModuleSlotMini /></div>
+            </div>
+            <ToastStack>
+              <SHToast type="success">Produto salvo com sucesso.</SHToast>
+              <SHToast type="warning" action="Tentar de novo">Não foi possível trocar de organização.</SHToast>
+              <SHToast type="error" action="Tentar de novo">Falha ao baixar o estoque do pedido.</SHToast>
+            </ToastStack>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="toast-origem" label="Origem por tipo & restrições" width={460} height={620}>
+          <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 12, justifyContent: "center" }}>
+            <div className="sh-section-h" style={{ marginTop: 0 }}>Origem por tipo</div>
+            <WNote><b>Sucesso.</b> MutationCache via <b>meta.successMessage</b>.</WNote>
+            <WNote><b>Erro.</b> MutationCache via <b>meta.errorMessage</b> ou mensagem padrão.</WNote>
+            <WNote><b>Informativo.</b> Eventos de sistema sem ação direta do usuário (ex.: sessão expirada · RN004).</WNote>
+            <WNote><b>Alerta.</b> Avisos contextuais que não bloqueiam o fluxo (ex.: falha ao trocar de organização).</WNote>
+            <div className="sh-section-h">Restrições de implementação</div>
+            <WNote><b>Nunca</b> usar <b>toast()</b> direto na feature.</WNote>
+            <WNote><b>Nunca</b> usar <b>alert()</b> ou <b>console.error()</b> como feedback de UI.</WNote>
+            <WNote><b>onError</b> local só quando houver ação local específica — sem duplicar o toast do MutationCache.</WNote>
+          </div>
+        </DCArtboard>
+
+      </DCSection>
+
     </DesignCanvas>
+  );
+}
+
+/* placeholder enxuto do módulo (reuso no demo de empilhamento) */
+function ModuleSlotMini() {
+  return (
+    <div className="sh-slot">
+      <div className="wf-sk" style={{ width: 180, height: 20 }} />
+      <div className="wf-sk" style={{ width: 300, height: 11, marginTop: 10 }} />
+      <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
+        <div className="wf-sk" style={{ flex: 1, height: 58 }} />
+        <div className="wf-sk" style={{ flex: 1, height: 58 }} />
+        <div className="wf-sk" style={{ flex: 1, height: 58 }} />
+      </div>
+      <div className="wf-sk" style={{ width: "100%", height: 11, marginTop: 20 }} />
+      <div className="wf-sk" style={{ width: "88%", height: 11, marginTop: 9 }} />
+    </div>
   );
 }
 

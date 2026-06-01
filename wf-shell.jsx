@@ -29,6 +29,10 @@ const SH_I = {
   zoomin: ic(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3M11 8v6M8 11h6"/></>),
   zoomout: ic(<><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3M8 11h6"/></>),
   trunc: ic(<path d="M5 12h14"/>),
+  circleCheck: ic(<><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.4 2.4L15.5 9.5"/></>),
+  info: ic(<><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6h.01"/></>),
+  triangleAlert: ic(<><path d="M10.3 4 2.5 17.5A1.7 1.7 0 0 0 4 20h16a1.7 1.7 0 0 0 1.5-2.5L13.7 4a1.7 1.7 0 0 0-3 0Z"/><path d="M12 9.5v4M12 17h.01"/></>),
+  circleX: ic(<><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></>),
 };
 
 /* navegação por papel (L.2) */
@@ -53,10 +57,10 @@ const NAV = [
 const ROLE_LABEL = { owner: "Dono", manager: "Gerente", sales: "Vendedor" };
 
 /* ── org switcher trigger ─────────────────────────────── */
-function OrgTrigger({ name = "Ateliê Joana", role = "owner", static: isStatic }) {
+function OrgTrigger({ name = "Ateliê Joana", role = "owner", static: isStatic, collapsed }) {
   return (
-    <div className={["sh-org", isStatic ? "is-static" : ""].join(" ")}>
-      <span className="sh-org-avatar">A</span>
+    <div className={["sh-org", isStatic ? "is-static" : "", collapsed ? "is-collapsed" : ""].join(" ")}>
+      <span className="sh-org-avatar">{name[0]}</span>
       <span className="sh-org-meta">
         <span className="sh-org-name">{name}</span>
         <span className="sh-org-role">{ROLE_LABEL[role]}</span>
@@ -67,20 +71,26 @@ function OrgTrigger({ name = "Ateliê Joana", role = "owner", static: isStatic }
 }
 
 /* ── sidebar ──────────────────────────────────────────── */
-function NavItem({ item, active }) {
+function NavItem({ item, active, showTip }) {
   return (
     <div className={["sh-navitem", active ? "is-active" : ""].join(" ")}>
       <span className="sh-ico">{SH_I[item.icon]}</span>
-      <span>{item.label}</span>
+      <span className="sh-navlabel">{item.label}</span>
+      <span className={["sh-tip", showTip ? "is-shown" : ""].join(" ")}>{item.label}</span>
     </div>
   );
 }
 
-function Sidebar({ role = "owner", active = "equipe", orgStatic }) {
+/* logotipo da sidebar — wordmark em span próprio p/ ocultar no estado recolhido */
+function SidebarBrand() {
+  return <span className="wf-logo"><span className="wf-logomark">i</span><span className="wf-wordmark">Inventto</span></span>;
+}
+
+function Sidebar({ role = "owner", active = "equipe", orgStatic, collapsed, tipFor }) {
   return (
-    <div className="sh-sidebar">
-      <div className="sh-sidebar-logo"><WLogo /></div>
-      <OrgTrigger role={role} static={orgStatic} />
+    <div className={["sh-sidebar", collapsed ? "is-collapsed" : ""].join(" ")}>
+      <div className="sh-sidebar-logo"><SidebarBrand /></div>
+      <OrgTrigger role={role} static={orgStatic} collapsed={collapsed} />
       <div className="sh-nav">
         {NAV.map((g) => {
           const items = g.items.filter((it) => it.roles.includes(role));
@@ -89,7 +99,7 @@ function Sidebar({ role = "owner", active = "equipe", orgStatic }) {
             <div key={g.group}>
               <div className="sh-group-label">{g.group}</div>
               <div className="sh-navgroup">
-                {items.map((it) => <NavItem key={it.id} item={it} active={it.id === active} />)}
+                {items.map((it) => <NavItem key={it.id} item={it} active={it.id === active} showTip={collapsed && it.id === tipFor} />)}
               </div>
             </div>
           );
@@ -152,10 +162,10 @@ function ModuleSlot({ title = "Gerenciar equipe", sub = "main · p-6/p-8 — cad
 }
 
 /* ── App Shell completa (desktop) ─────────────────────── */
-function AppShell({ role = "owner", active = "equipe", crumb = ["Início", "Equipe"], orgStatic }) {
+function AppShell({ role = "owner", active = "equipe", crumb = ["Início", "Equipe"], orgStatic, collapsed, tipFor }) {
   return (
     <div className="wf sh-app">
-      <Sidebar role={role} active={active} orgStatic={orgStatic} />
+      <Sidebar role={role} active={active} orgStatic={orgStatic} collapsed={collapsed} tipFor={tipFor} />
       <div className="sh-inset">
         <TopHeader crumb={crumb} />
         <div className="sh-main"><ModuleSlot /></div>
@@ -444,7 +454,34 @@ function GlobalState({ icon = "alert", title, text, cta }) {
   );
 }
 
-/* switch lo-fi (não existe no kit base) */
+/* ── Toasts · feedback efêmero global (MutationCache + eventos do sistema) ── */
+const TOAST_TYPES = {
+  success: { icon: "circleCheck",   color: "var(--wf-ok)",   bg: "var(--wf-ok-bg)",   label: "Sucesso",     token: "--status-healthy",  ttl: "~4 s", life: 30 },
+  info:    { icon: "info",          color: "var(--wf-ink)",  bg: "var(--wf-fieldbg)", label: "Informativo", token: "--foreground",      ttl: "~5 s", life: 48 },
+  warning: { icon: "triangleAlert", color: "var(--wf-warn)", bg: "var(--wf-warn-bg)", label: "Alerta",      token: "--status-warning",  ttl: "~6 s", life: 66 },
+  error:   { icon: "circleX",       color: "var(--wf-err)",  bg: "var(--wf-err-bg)",  label: "Erro",        token: "--status-critical", ttl: "~7 s", life: 84 },
+};
+
+function SHToast({ type = "success", children, action, progress }) {
+  const t = TOAST_TYPES[type];
+  const bar = progress != null ? progress : t.life;
+  return (
+    <div className="sh-toast" style={{ "--tc": t.color, "--tbg": t.bg }}>
+      <span className="sh-toast-ico">{SH_I[t.icon]}</span>
+      <span className="sh-toast-msg">{children}</span>
+      {action && <button className="sh-toast-action" type="button">{action}</button>}
+      <button className="sh-toast-x" type="button" aria-label="Fechar">{SH_I.x}</button>
+      <span className="sh-toast-bar" style={{ width: bar + "%" }} />
+    </div>
+  );
+}
+
+/* pilha no canto inferior direito — o mais recente embaixo */
+function ToastStack({ children, absolute = true }) {
+  return <div className={["sh-toaststack", absolute ? "" : "is-flow"].join(" ")}>{children}</div>;
+}
+
+/* ── switch lo-fi (não existe no kit base) ────────────── */
 function WSwitch({ on }) {
   return (
     <span style={{ width: 38, height: 22, borderRadius: 999, background: on ? "var(--wf-ink)" : "var(--wf-line)", position: "relative", flex: "0 0 auto", display: "inline-block" }}>
@@ -457,5 +494,5 @@ window.SH = {
   SH_I, NAV, Sidebar, OrgTrigger, NavItem, Crumb, TopHeader, ModuleSlot,
   AppShell, MobileShell, OrgPopover, CreateOrgDialog,
   UserNavTrigger, UserNavMenu, AvatarDialog, PasswordDialog, NotifPanel,
-  Conta, GlobalState, WSwitch,
+  Conta, GlobalState, WSwitch, SHToast, ToastStack, TOAST_TYPES,
 };

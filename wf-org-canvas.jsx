@@ -5,6 +5,8 @@ const {
   DeactivateOrgDialog, DeleteOrgDialog, ORG_I,
 } = window.ORG;
 
+const { SHToast } = window.SH;
+
 const OW = 1200, OPHONE = 390;
 
 /* moldura neutra com caption (igual ao shell-canvas) */
@@ -47,6 +49,9 @@ function OrgCanvas() {
         </DCArtboard>
         <DCArtboard id="config-desk" label="Configuração da organização · Desktop · aba Loja (com alterações pendentes)" width={OW} height={860}>
           <OrgConfigShell tab="loja" pending />
+        </DCArtboard>
+        <DCArtboard id="config-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={OW} height={860}>
+          <OrgConfigShell tab="loja" pending collapsed />
         </DCArtboard>
         <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={420} height={860}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 13, justifyContent: "center" }}>
@@ -96,8 +101,8 @@ function OrgCanvas() {
           </Frame>
         </DCArtboard>
         <DCArtboard id="st-cep" label="CEP não encontrado" width={900} height={885}>
-          <Frame tone="err" name="Toast no canto inferior direito + endereço manual" refLabel="RN024 · §6" center={false}
-            toast={<WToast>CEP não encontrado. Preencha o endereço manualmente.</WToast>}>
+          <Frame tone="err" name="Toast (anatomia do App Shell) no canto inferior direito + endereço manual" refLabel="RN024 · §6" center={false}
+            toast={<SHToast type="warning" action="Preencher manual">CEP não encontrado. Preencha o endereço manualmente.</SHToast>}>
             <OrgConfig tab="loja" cepError pending />
           </Frame>
         </DCArtboard>
@@ -153,8 +158,14 @@ function OrgCanvas() {
 
       {/* ───── MOBILE ───── */}
       <DCSection id="mobile" title="05 · Mobile (~390px)" subtitle="Mesma tela, coluna única · tabs roláveis · barra de ações no rodapé">
-        <DCArtboard id="mob-loja" label="Mobile · aba Loja (alterações pendentes)" width={OPHONE} height={820}>
+        <DCArtboard id="mob-loja" label="Mobile · aba Loja (alterações pendentes)" width={OPHONE} height={1120}>
           <OrgConfigMobile tab="loja" pending />
+        </DCArtboard>
+        <DCArtboard id="mob-op" label="Mobile · aba Operacional" width={OPHONE} height={520}>
+          <OrgConfigMobile tab="op" />
+        </DCArtboard>
+        <DCArtboard id="mob-horarios" label="Mobile · aba Horários" width={OPHONE} height={760}>
+          <OrgConfigMobile tab="horarios" />
         </DCArtboard>
         <DCArtboard id="mob-danger" label="Mobile · aba Danger Zone" width={OPHONE} height={620}>
           <OrgConfigMobile tab="danger" />
