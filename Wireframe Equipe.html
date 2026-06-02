@@ -13,9 +13,35 @@
 <style>
   html, body { margin: 0; padding: 0; background: #f0eee9; }
   #root { width: 100vw; height: 100vh; }
+  .back-button {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 10000;
+    background: white;
+    border: 1px solid #e5e0d9;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #3a3631;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .back-button:hover {
+    border-color: #d4ccc0;
+    box-shadow: 0 4px 12px rgba(58, 54, 49, 0.08);
+    background-color: #fafaf8;
+  }
 </style>
 </head>
 <body>
+<a href="index.html" class="back-button">← Voltar</a>
 <div id="root"></div>
 
 <template id="__bundler_thumbnail">
