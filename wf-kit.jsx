@@ -56,7 +56,7 @@ const WError = ({ children }) => <p className="wf-errortext">{children}</p>;
 
 function WBtn({ variant = "primary", loading, disabled, full, children }) {
   return (
-    <div className={["wf-btn", `wf-btn--${variant}`, full ? "is-full" : "", disabled || loading ? "is-disabled" : ""].join(" ")}>
+    <div className={["wf-btn", `wf-btn--${variant}`, full ? "is-full" : "", disabled || loading ? "is-disabled" : ""].join(" ")} style={{ height: "36px" }}>
       {loading && variant !== "ghost" && variant !== "link" && <Spin />}
       {children}
     </div>);
