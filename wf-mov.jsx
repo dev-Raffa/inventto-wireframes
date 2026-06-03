@@ -49,8 +49,8 @@ const RAW_MOVEMENTS = [
     ] },
   { id: "m2", date: "28/05/2026", time: "11:05", type: "out", reason: "Venda (balcão)", doc: "PDV #20518", who: null,
     items: [
-      { prod: "Camisa Social Algodão", sku: "CS-ALG-BR-M", color: "#f1ede5", attrs: ["Cor: Branco", "Tam: M"], qty: 2, value: 64.2 },
-      { prod: "Lenço de Seda Estampado", sku: "LS-EST-03", attrs: ["Estampa: Folhas"], qty: 1, value: 39.9 },
+      { prod: "Camisa Social Algodão", sku: "CS-ALG-BR-M", color: "#f1ede5", attrs: ["Cor: Branco", "Tam: M"], qty: 2, valueOrig: 78, discount: 13.8, value: 64.2 },
+      { prod: "Lenço de Seda Estampado", sku: "LS-EST-03", attrs: ["Estampa: Folhas"], qty: 1, valueOrig: 49.9, discount: 10, value: 39.9 },
     ] },
   { id: "m3", date: "27/05/2026", time: "16:48", type: "out", reason: "Perda / Avaria", doc: "Ocorrência #12", who: "Marcos Lima",
     items: [
@@ -147,6 +147,9 @@ function MvItemProd({ it }) {
 /* ── card de detalhe (sublinha expandida) ─────────────── */
 function MvDetailCard({ m, role }) {
   const showValue = role !== "sales";
+  // movimentação de venda → colunas adicionais (Valor original · Desconto)
+  const isSale = /venda/i.test(m.reason || "");
+  const showSaleCols = isSale && showValue;
   return (
     <div className="mv-detail">
       {/* header */}
@@ -167,7 +170,9 @@ function MvDetailCard({ m, role }) {
           <tr>
             <th scope="col">Produto</th>
             <th scope="col" className="is-right">Quantidade</th>
-            {showValue && <th scope="col" className="is-right">Valor</th>}
+            {showSaleCols && <th scope="col" className="is-right">Valor original</th>}
+            {showSaleCols && <th scope="col" className="is-right">Desconto</th>}
+            {showValue && <th scope="col" className="is-right">{isSale ? "Valor líquido" : "Valor"}</th>}
           </tr>
         </thead>
         <tbody>
@@ -180,6 +185,18 @@ function MvDetailCard({ m, role }) {
                 </span>
                 <span className="mv-item-unit">{it.qty === 1 ? "unidade" : "unidades"}</span>
               </td>
+              {showSaleCols && (
+                <td className="is-right">
+                  <span className="mv-item-orig">{it.valueOrig != null ? brl(it.valueOrig) : "—"}</span>
+                </td>
+              )}
+              {showSaleCols && (
+                <td className="is-right">
+                  <span className={["mv-item-discount", it.discount ? "is-on" : ""].join(" ")}>
+                    {it.discount ? "− " + brl(it.discount) : "—"}
+                  </span>
+                </td>
+              )}
               {showValue && <td className="is-right"><span className="mv-item-value">{brl(it.value)}</span></td>}
             </tr>
           ))}
@@ -505,6 +522,7 @@ function MvHistoryLoading() {
 /* ════ MOBILE (~390px) ═════════════════════════════════ */
 function MvMCard({ m, role, defaultOpen }) {
   const showValue = role !== "sales";
+  const isSale = /venda/i.test(m.reason || "");
   const [open, setOpen] = useState(!!defaultOpen);
   return (
     <div className={["mv-mcard", open ? "is-open" : ""].join(" ")}>
@@ -551,6 +569,12 @@ function MvMCard({ m, role, defaultOpen }) {
               </span>
               <span className="mv-mitem-num">
                 <span className={["mv-item-qty", m.type === "in" ? "is-in" : "is-out"].join(" ")}>{m.type === "in" ? "+" : "−"}{it.qty}</span>
+                {showValue && isSale && it.valueOrig != null && (
+                  <span className="mv-mitem-orig">{brl(it.valueOrig)}</span>
+                )}
+                {showValue && isSale && it.discount ? (
+                  <span className="mv-mitem-discount">− {brl(it.discount)}</span>
+                ) : null}
                 {showValue && <span className="mv-item-value">{brl(it.value)}</span>}
               </span>
             </div>

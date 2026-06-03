@@ -1,17 +1,22 @@
-/* Inventto — Wireframe · Módulo Catálogos · montagem do canvas (Superfície 2 · 2.5) */
+/* Inventto — Wireframe · Módulo Catálogos · montagem do canvas (Superfície 2 · 2.5)
+   Catálogo CANAL-AGNÓSTICO: lista com ações inline (Editar/Remover), Dialog Criar,
+   Sheet Editar (nome + canais vinculados read-only), Produtos do catálogo
+   (preço, sem destaque) e Dialog de remoção (variantes A/B · RN061). */
 
 const {
-  CAT_I, CatTypeBadge, CatStateBadge, CatList, CatListShell, CatListLoading,
-  CatActionsMenu, PrereqDialog, RemoveDialog, CatListMobile, CATALOGS,
+  CAT_I, CatList, CatListShell, CatListLoading,
+  RemoveDialog, CreateCatalogDialog, CatListMobile, CATALOGS,
+  CatChannels, CreateCatalogMobile, RemoveCatalogMobile,
 } = window.CAT;
 const {
-  CC_I, ConfigShell, CuradoriaShell, Curadoria, AddProductsSheet, VitrinePreview, CatColorPicker,
+  CC_I, EditCatalogSheet, CuradoriaShell, Curadoria, AddProductsSheet,
+  LinkedChannels, UndoToast, ProdutosMobile, EditCatalogMobile, AddProductsMobile,
 } = window.CATC;
 
 const CW = 1200, CPHONE = 390;
 
 /* moldura neutra com caption (igual aos demais módulos) */
-function CFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, scrim, toast }) {
+function CFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, toast }) {
   return (
     <div className="wf" style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--wf-field)", position: "relative" }}>
       <WStateCap tone={tone} name={name} refLabel={refLabel} />
@@ -24,39 +29,13 @@ function CFrame({ tone = "empty", name, refLabel, children, pad = 28, center = t
 }
 
 function CatLegend() {
-  const sw = (cls, label) => <div className="wf-legrow"><span className={["wf-swatch", cls].join(" ")} />{label}</div>;
   return (
     <div className="wf-legend wf">
       <h3>Wireframe · Superfície 2 — Módulo Catálogos (2.5)</h3>
-      <p className="wf-legsub">Onde se define <b>o que se vende e por quanto</b>: a <b>lista /catalogos</b> (PDV + vitrines online, com ciclo de vida), o <b>Configurar</b> (abas que mudam por tipo, com preview ao vivo da vitrine), a <b>Curadoria</b> (produtos + preço, com auto-save) e o <b>Modal de remoção</b>. Lo-fi cinza-escala — exceção: o <b>eixo de canal</b> (PDV × Online) e o <b>estado</b> da vitrine ganham cor (DS §1.2).</p>
-      {sw("ct-leg-pdv", "PDV — catálogo de balcão (sem endereço público)")}
-      {sw("ct-leg-online", "Online — vitrine com slug inventto.app/")}
-      {sw("ct-leg-live", "No ar — vitrine publicada e visível")}
+      <p className="wf-legsub">Onde se define <b>o que se vende e por quanto</b>. O catálogo é <b>canal-agnóstico</b>: não tem tipo nem publicação — é só um <b>nome</b> e uma lista de <b>produtos com preço</b>. São os <b>canais</b> (PDV e storefronts) que escolhem qual catálogo usar nas próprias configurações. Cinco telas: a <b>lista /catalogos</b> (ações inline Editar/Remover), o <b>Dialog Criar</b> (nome), o <b>Sheet Editar</b> (nome + canais vinculados read-only), os <b>Produtos do catálogo</b> (itens + preço, com auto-save) e o <b>Dialog Remover</b> (A: confirmação por nome · B: bloqueada por canais). Lo-fi cinza-escala integral.</p>
       <div className="wf-legrow"><span className="wf-swatch" style={{ background: "var(--wf-ink)", borderColor: "var(--wf-ink)" }} />Preenchimento sólido = CTA primária</div>
       <div className="wf-legrow"><span className="wf-swatch" style={{ background: "var(--wf-note-bg)", borderColor: "var(--wf-note)" }} />Ardósia = nota de regra (RN)</div>
-      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF024–RF026 · RN058–RN067. Microcopy §2, §4, §5, §8.</div>
-    </div>
-  );
-}
-
-/* referência de primitivos (badges de canal/estado + colorpicker) */
-function CatRef() {
-  return (
-    <div className="wf" style={{ display: "flex", flexDirection: "column", gap: 16, padding: 26, background: "var(--wf-fieldbg)", height: "100%", justifyContent: "center" }}>
-      <span className="wf-eyebrow">Badge de tipo — coluna Tipo</span>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-        <CatTypeBadge type="pdv" /><CatTypeBadge type="online" />
-      </div>
-      <span className="wf-eyebrow" style={{ marginTop: 6 }}>Estado da vitrine — coluna Estado (público)</span>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
-        <CatStateBadge state="live" /><CatStateBadge state="off" /><CatStateBadge state={null} />
-      </div>
-      <span className="wf-eyebrow" style={{ marginTop: 6 }}>ColorPicker [a construir] — identidade da vitrine</span>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        <CatColorPicker label="Cor primária" color="#2F5D4A" hex="#2F5D4A" />
-        <CatColorPicker label="Secundária" color="#C98A3A" hex="#C98A3A" />
-      </div>
-      <WNote><b>PDV × Online é o eixo do módulo.</b> Catálogos de balcão alimentam o PDV e não têm endereço; vitrines online têm slug, identidade visual e ciclo de publicação (No ar / Despublicado). Só esse eixo recebe cor — todo o resto é cinza-escala. DS §1.2.</WNote>
+      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF024–RF025 · RN058–RN063. Microcopy §2, §3, §4, §5.</div>
     </div>
   );
 }
@@ -66,138 +45,206 @@ function CatCanvas() {
     <DesignCanvas>
 
       {/* ───── ANATOMIA ───── */}
-      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="Lista /catalogos dentro do App Shell · PDV + vitrines online com ciclo de vida — RF024">
+      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="Lista /catalogos dentro do App Shell · catálogo canal-agnóstico (nome + itens) — RF024">
         <DCArtboard id="legend" label="Legenda" width={600} height={460}>
           <div style={{ height: "100%", display: "grid", placeItems: "center", background: "var(--wf-fieldbg)", padding: 20 }}><CatLegend /></div>
         </DCArtboard>
-        <DCArtboard id="list-desk" label="Lista · Desktop · Owner/Manager" width={CW} height={640}>
+        <DCArtboard id="list-desk" label="Lista · Desktop · Owner/Manager" width={CW} height={620}>
           <CatListShell scenario="base" />
         </DCArtboard>
-        <DCArtboard id="list-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={CW} height={640}>
+        <DCArtboard id="list-desk-collapsed" label="Mesma tela · sidebar recolhida (modelo do App Shell)" width={CW} height={620}>
           <CatListShell scenario="base" collapsed />
         </DCArtboard>
-        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={460} height={640}>
+        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={460} height={620}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 12, justifyContent: "center" }}>
-            <WNote><b>Dois tipos, uma lista.</b> Catálogo <b>PDV</b> (balcão, sem endereço) e <b>Online</b> (vitrine com slug). A coluna <b>Estado</b> só se aplica a vitrines online (No ar / Despublicado).</WNote>
-            <WNote><b>Ciclo de vida (RN066).</b> Publicar uma vitrine verifica pré-requisitos (WhatsApp + horários + ≥1 produto com preço). Faltando algo → Dialog orientativo com atalhos.</WNote>
-            <WNote><b>Ações (DropdownMenu).</b> Configurar · Curadoria · Publicar/Despublicar · Copiar link (só No ar) · Remover. Copiar link fica desabilitado em vitrines fora do ar.</WNote>
-            <WNote><b>Recorte por papel.</b> Sales: leitura — sem “Criar catálogo” e sem dropdown de ações.</WNote>
-            <WNote><b>Remoção (RN063).</b> Vitrine pública removida deixa o slug em quarentena por 30 dias.</WNote>
+            <WNote><b>Canal-agnóstico.</b> O catálogo não tem tipo (PDV/online) nem estado de publicação. É apenas um nome + uma curadoria de itens com preço.</WNote>
+            <WNote><b>Canais vinculados.</b> A lista mostra quantos canais (PDV e storefronts) usam cada catálogo. Quem vincula é o canal, na própria configuração — aqui é read-only.</WNote>
+            <WNote><b>Ações inline.</b> Editar (ícone lápis → Sheet de edição do nome) e Remover (ícone lixeira → Dialog). Sem publicar/copiar link — isso pertence ao storefront.</WNote>
+            <WNote><b>Recorte por papel.</b> Sales: leitura — sem “Criar catálogo” e sem ícones de ação.</WNote>
+            <WNote><b>Remoção (RN061).</b> Bloqueada enquanto houver canais vinculados (variante B). Sem canais → permitida, confirmada por digitação do nome (variante A).</WNote>
           </div>
         </DCArtboard>
-        <DCArtboard id="cat-ref" label="Referência · primitivos" width={560} height={560}>
-          <CatRef />
+        <DCArtboard id="cat-ref" label="Referência · contador de canais" width={420} height={300}>
+          <div className="wf" style={{ height: "100%", display: "flex", flexDirection: "column", gap: 16, padding: 26, background: "var(--wf-fieldbg)", justifyContent: "center" }}>
+            <span className="wf-eyebrow">Coluna “Canais vinculados”</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}><CatChannels channels={[{}, {}]} /><span style={{ fontSize: 11.5, color: "var(--wf-muted)", fontFamily: "var(--wf-mono)" }}>· dois ou mais</span></div>
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}><CatChannels channels={[{}]} /><span style={{ fontSize: 11.5, color: "var(--wf-muted)", fontFamily: "var(--wf-mono)" }}>· singular</span></div>
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}><CatChannels channels={[]} /><span style={{ fontSize: 11.5, color: "var(--wf-muted)", fontFamily: "var(--wf-mono)" }}>· removível (variante A)</span></div>
+            </div>
+            <WNote><b>Sem cor semântica.</b> Sem o eixo PDV×Online, o módulo é cinza-escala integral.</WNote>
+          </div>
         </DCArtboard>
       </DCSection>
 
       {/* ───── LISTA: ESTADOS & AÇÕES ───── */}
-      <DCSection id="lista" title="01 · Lista de catálogos · estados e ações" subtitle="Carregando · vazio · dropdown de ações · Dialog de pré-requisitos · recorte Vendedor — RF024, RN066">
-        <DCArtboard id="st-loading" label="Carregando (skeleton)" width={980} height={460}>
+      <DCSection id="lista" title="01 · Lista de catálogos · estados e ações" subtitle="Carregando · vazio · ações inline (Editar/Remover) · recorte Vendedor — RF024, RN058">
+        <DCArtboard id="st-loading" label="Carregando (skeleton)" width={CW} height={480}>
           <CFrame tone="load" name="Abre em skeleton de tabela" refLabel="Matriz" center={false}>
             <CatListLoading />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="st-empty" label="Primeira vez · sem catálogos" width={980} height={460}>
+        <DCArtboard id="st-empty" label="Primeira vez · sem catálogos" width={CW} height={460}>
           <CFrame tone="empty" name="Microcopy + CTA “Criar catálogo”" refLabel="§4" center={false}>
             <CatList scenario="empty" />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="st-menu" label="DropdownMenu de ações (vitrine No ar)" width={CW} height={640}>
-          <CFrame tone="empty" name="Configurar · Curadoria · Despublicar · Copiar link · Remover" refLabel="RN058–64" center={false} pad={0}>
-            <CatListShell scenario="base" menuFor="c2" />
-          </CFrame>
-        </DCArtboard>
-        <DCArtboard id="st-prereq" label="Dialog · pré-requisitos de publicação" width={CW} height={640}>
-          <div className="ct-overlay-stage wf">
-            <div style={{ position: "absolute", inset: 0, filter: "saturate(.9)" }}><CatListShell scenario="base" /></div>
-            <div className="ct-scrim"><PrereqDialog /></div>
-          </div>
-        </DCArtboard>
         <DCArtboard id="st-sales" label="Recorte por papel · Vendedor (leitura)" width={CW} height={600}>
-          <CFrame tone="empty" name="Sem “Criar catálogo”, sem coluna/dropdown de ações" refLabel="RN058" center={false} pad={0}>
+          <CFrame tone="empty" name="Sem “Criar catálogo”, sem coluna/ícones de ação" refLabel="RN058" center={false} pad={0}>
             <CatListShell scenario="base" role="sales" />
           </CFrame>
         </DCArtboard>
       </DCSection>
 
-      {/* ───── CONFIGURAR ───── */}
-      <DCSection id="config" title="02 · Configurar catálogo · /catalogos/:id" subtitle="Abas por tipo · Geral (slug com validação) · Vitrine com preview ao vivo · PDV — RF024, RF026, RN062">
-        <DCArtboard id="cfg-vitrine" label="Vitrine (público) · identidade + comportamento + preview" width={CW} height={860}>
-          <ConfigShell type="online" tab="vitrine" dirty layout="grid" showPrices={true} showSoldout={true} />
-        </DCArtboard>
-        <DCArtboard id="cfg-geral" label="Geral (público) · slug disponível" width={CW} height={680}>
-          <ConfigShell type="online" tab="geral" slugState="ok" />
-        </DCArtboard>
-        <DCArtboard id="cfg-slug-taken" label="Geral · slug em uso (erro inline)" width={760} height={560}>
-          <CFrame tone="err" name="“Este endereço já está em uso.”" refLabel="RN062 · §2" center={false}>
-            <div className="wf" style={{ width: "100%", maxWidth: 560 }}>
-              <ConfigShell type="online" tab="geral" slugState="taken" />
-            </div>
-          </CFrame>
-        </DCArtboard>
-        <DCArtboard id="cfg-saving" label="Vitrine · salvando alterações" width={CW} height={860}>
-          <CFrame tone="load" name="“Salvando…” → toast “Alterações salvas.”" refLabel="§5" center={false} pad={0} toast={<WToast ok>Alterações salvas.</WToast>}>
-            <ConfigShell type="online" tab="vitrine" saving layout="list" showPrices={false} showSoldout={true} />
-          </CFrame>
-        </DCArtboard>
-        <DCArtboard id="cfg-pdv" label="PDV · abas reduzidas (Geral + Curadoria)" width={CW} height={560}>
-          <ConfigShell type="pdv" tab="geral" />
-        </DCArtboard>
-        <DCArtboard id="cfg-preview-vars" label="Preview · variações de comportamento" width={460} height={900}>
-          <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 22, display: "flex", flexDirection: "column", gap: 18, overflow: "auto" }}>
-            <VitrinePreview layout="grid" showPrices={true} showSoldout={true} />
-            <div style={{ display: "flex", gap: 8, alignItems: "center", color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>↓ preços ocultos · lista · sem esgotados</div>
-            <VitrinePreview layout="list" showPrices={false} showSoldout={false} />
+      {/* ───── CRIAR (dialog) & EDITAR (sheet) ───── */}
+      <DCSection id="editar" title="02 · Criar (Dialog 2.5.2) & editar (Sheet 2.5.3) · sobre /catalogos" subtitle="Criar é um Dialog max-w-sm — campo único Nome → redireciona p/ os produtos (sem toast). Editar é um Sheet max-w-md — Nome + canais vinculados read-only → toast “Alterações salvas.” — RF024, RN058–RN062, §2/§5">
+        <DCArtboard id="ed-novo" label="Dialog · Criar catálogo (sobre /catalogos)" width={CW} height={640}>
+          <div className="ct-overlay-stage wf">
+            <div style={{ position: "absolute", inset: 0 }}><CatListShell scenario="base" /></div>
+            <div className="ct-scrim"><CreateCatalogDialog /></div>
           </div>
+        </DCArtboard>
+        <DCArtboard id="ed-novo-err" label="Criar · nome vazio ao salvar (erro §2)" width={520} height={400}>
+          <CFrame tone="err" name="“Informe um nome para o catálogo.”" refLabel="§2">
+            <CreateCatalogDialog state="error" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="ed-novo-saving" label="Criar · Criando… (Loader2 + botão desabilitado)" width={520} height={400}>
+          <CFrame tone="load" name="“Criando…” → redireciona p/ /catalogos/:id/produtos" refLabel="RN060">
+            <CreateCatalogDialog state="saving" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="ed-edit" label="Sheet · Editar catálogo (sobre /catalogos)" width={CW} height={640}>
+          <div className="ct-overlay-stage wf">
+            <div style={{ position: "absolute", inset: 0 }}><CatListShell scenario="base" /></div>
+            <div className="mv-sheet-scrim" />
+            <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, display: "flex" }}><EditCatalogSheet /></div>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="ed-edit-solo" label="Sheet · standalone (Nome + canais vinculados)" width={560} height={620}>
+          <CFrame tone="empty" name="Cabeçalho “Editar catálogo” · ghost Cancelar + Salvar" refLabel="2.5.3" center={false}>
+            <EditCatalogSheet standalone />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="ed-edit-saving" label="Editar · Salvando… → toast" width={560} height={620}>
+          <CFrame tone="load" name="“Salvando…” → toast “Alterações salvas.”" refLabel="§5" center={false} toast={<WToast ok>Alterações salvas.</WToast>}>
+            <EditCatalogSheet standalone saving />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="ed-edit-nochan" label="Editar · sem canais vinculados" width={560} height={520}>
+          <CFrame tone="empty" name="“Nenhum canal vinculado a este catálogo.”" refLabel="2.5.3" center={false}>
+            <EditCatalogSheet standalone nameVal="Outlet & Promoções" channels={[]} />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="ed-edit-loading" label="Editar · carregando (skeleton)" width={560} height={560}>
+          <CFrame tone="load" name="Abre em skeleton · botão Salvar desabilitado" refLabel="Matriz" center={false}>
+            <EditCatalogSheet standalone loading />
+          </CFrame>
         </DCArtboard>
       </DCSection>
 
-      {/* ───── CURADORIA ───── */}
-      <DCSection id="curadoria" title="03 · Curadoria de itens · /catalogos/:id/itens" subtitle="Produtos + preço de venda/original + destaque · auto-save · Sheet adicionar produtos — RF025, RN065">
-        <DCArtboard id="cur-base" label="Curadoria · itens com preço (base)" width={CW} height={640}>
+      {/* ───── PRODUTOS DO CATÁLOGO ───── */}
+      <DCSection id="curadoria" title="03 · Produtos do catálogo · /catalogos/:id/produtos" subtitle="Itens + preço de venda/original · auto-save · sem destaque (pertence ao storefront) — RF025, RN063">
+        <DCArtboard id="cur-base" label="Produtos · itens com preço (base)" width={CW} height={660}>
           <CuradoriaShell scenario="base" />
         </DCArtboard>
-        <DCArtboard id="cur-new" label="Item recém-adicionado · sem preço (warning)" width={CW} height={720}>
-          <CFrame tone="err" name="Borda warning + “Defina um preço para incluir este item.”" refLabel="RN065 · §2" center={false} pad={0}>
+        <DCArtboard id="cur-new" label="Item recém-adicionado · sem preço (warning)" width={CW} height={880}>
+          <CFrame tone="err" name="Borda warning + “Defina um preço para incluir este item.”" refLabel="RN063 · §2" center={false} pad={0}>
             <CuradoriaShell scenario="new" />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="cur-empty" label="Curadoria · vazia" width={980} height={460}>
+        <DCArtboard id="cur-saving" label="Auto-save de preço (spinner discreto)" width={CW} height={720}>
+          <CFrame tone="load" name="Preço salva automaticamente · “salvando…”" refLabel="Matriz" center={false} pad={0}>
+            <CuradoriaShell scenario="saving" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="cur-undo" label="Remoção reversível (toast 5s)" width={CW} height={700}>
+          <CFrame tone="empty" name="“{produto} removido. Desfazer”" refLabel="§3" center={false} pad={0} toast={<UndoToast />}>
+            <CuradoriaShell scenario="base" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="cur-empty" label="Produtos · vazio" width={CW} height={460}>
           <CFrame tone="empty" name="“Adicione produtos a este catálogo.” + CTA" refLabel="§4" center={false}>
             <Curadoria scenario="empty" />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="cur-sheet" label="Sheet · Adicionar produtos (max-w-lg)" width={CW} height={760}>
+        <DCArtboard id="cur-sales" label="Vendedor · campos readonly, sem ações" width={CW} height={700}>
+          <CFrame tone="empty" name="Sales: visualização — sem “Adicionar” e sem remover" refLabel="RN058" center={false} pad={0}>
+            <CuradoriaShell scenario="base" role="sales" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="cur-sheet" label="Sheet · Adicionar produtos (max-w-lg)" width={CW} height={900}>
           <div className="ct-overlay-stage wf">
-            <div style={{ position: "absolute", inset: 0, filter: "saturate(.9)" }}><CuradoriaShell scenario="base" /></div>
+            <div style={{ position: "absolute", inset: 0 }}><CuradoriaShell scenario="base" /></div>
             <div className="mv-sheet-scrim" />
             <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, display: "flex" }}><AddProductsSheet /></div>
           </div>
         </DCArtboard>
-        <DCArtboard id="cur-sheet-solo" label="Sheet · standalone" width={560} height={720}>
+        <DCArtboard id="cur-sheet-solo" label="Sheet · standalone" width={560} height={700}>
           <CFrame tone="empty" name="Checkbox por produto · “Já adicionado” desabilitado" refLabel="RF025" center={false}>
             <AddProductsSheet standalone />
           </CFrame>
         </DCArtboard>
       </DCSection>
 
-      {/* ───── MODAL & MOBILE ───── */}
-      <DCSection id="modal-mobile" title="04 · Modal de remoção & Mobile (~390px)" subtitle="Modal 2.5.4 (slug em quarentena) · lista em cards · header com Plus icon-only">
-        <DCArtboard id="rm-online" label="Remover vitrine pública (slug 30 dias)" width={520} height={420}>
-          <CFrame tone="err" name="“ficará reservado por 30 dias” (RN063)" refLabel="2.5.4">
-            <RemoveDialog variant="online" />
+      {/* ───── DIALOG REMOVER ───── */}
+      <DCSection id="modal" title="04 · Dialog remover (2.5.5)" subtitle="A: remoção permitida — confirmada por digitação do nome · B: bloqueada por canais (RN061)">
+        <DCArtboard id="rm-a" label="Variante A · idle (Remover desabilitado até confirmar)" width={520} height={470}>
+          <CFrame tone="err" name="“Digite o nome do catálogo para confirmar”" refLabel="2.5.5 · A">
+            <RemoveDialog variant="A" />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="rm-pdv" label="Remover catálogo PDV · removendo" width={520} height={400}>
-          <CFrame tone="load" name="“Removendo…” → toast “Catálogo removido.”" refLabel="Matriz">
-            <RemoveDialog variant="pdv" state="saving" />
+        <DCArtboard id="rm-a-confirmed" label="Variante A · nome digitado (Remover habilitado)" width={520} height={470}>
+          <CFrame tone="err" name="Match exato → botão destrutivo habilitado" refLabel="2.5.5 · A">
+            <RemoveDialog variant="A" state="confirmed" />
           </CFrame>
         </DCArtboard>
-        <DCArtboard id="mob-list" label="Lista · cards (mobile)" width={CPHONE} height={720}>
+        <DCArtboard id="rm-a-saving" label="Variante A · removendo" width={520} height={470}>
+          <CFrame tone="load" name="“Removendo…” → toast “Catálogo removido.”" refLabel="Matriz" toast={<WToast ok>Catálogo removido.</WToast>}>
+            <RemoveDialog variant="A" state="saving" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="rm-b" label="Variante B · bloqueada por canais vinculados (RN061)" width={520} height={460}>
+          <CFrame tone="empty" name="“Desvincule-os antes de remover.” + lista de canais" refLabel="2.5.5 · B">
+            <RemoveDialog variant="B" />
+          </CFrame>
+        </DCArtboard>
+        <DCArtboard id="rm-b-over" label="Variante B · sobre a lista" width={CW} height={640}>
+          <div className="ct-overlay-stage wf">
+            <div style={{ position: "absolute", inset: 0 }}><CatListShell scenario="base" /></div>
+            <div className="ct-scrim"><RemoveDialog variant="B" /></div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───── MOBILE (~390px) ───── */}
+      <DCSection id="mobile" title="05 · Mobile (~390px)" subtitle="Todas as telas do módulo em ~390px: lista, criar (dialog), editar (bottom sheet), produtos e remover — RF024–RF025">
+        <DCArtboard id="mob-list" label="Lista · cards (Owner/Manager)" width={CPHONE} height={720}>
           <CatListMobile />
         </DCArtboard>
         <DCArtboard id="mob-list-sales" label="Lista · Vendedor (sem + / sem ações)" width={CPHONE} height={720}>
           <CatListMobile role="sales" />
+        </DCArtboard>
+        <DCArtboard id="mob-create" label="Criar catálogo · Dialog (2.5.2)" width={CPHONE} height={720}>
+          <CreateCatalogMobile />
+        </DCArtboard>
+        <DCArtboard id="mob-edit" label="Editar catálogo · bottom sheet (2.5.3)" width={CPHONE} height={720}>
+          <EditCatalogMobile />
+        </DCArtboard>
+        <DCArtboard id="mob-produtos" label="Produtos do catálogo (2.5.4)" width={CPHONE} height={848}>
+          <ProdutosMobile />
+        </DCArtboard>
+        <DCArtboard id="mob-produtos-sales" label="Produtos · Vendedor (readonly)" width={CPHONE} height={848}>
+          <ProdutosMobile role="sales" />
+        </DCArtboard>
+        <DCArtboard id="mob-addprod" label="Adicionar produtos · bottom sheet (max-w-lg)" width={CPHONE} height={760}>
+          <AddProductsMobile />
+        </DCArtboard>
+        <DCArtboard id="mob-remove" label="Remover catálogo · Dialog A (2.5.5)" width={CPHONE} height={720}>
+          <RemoveCatalogMobile variant="A" state="confirmed" />
+        </DCArtboard>
+        <DCArtboard id="mob-remove-b" label="Remover bloqueado · Dialog B (RN061)" width={CPHONE} height={720}>
+          <RemoveCatalogMobile variant="B" />
         </DCArtboard>
       </DCSection>
 

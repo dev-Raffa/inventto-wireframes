@@ -9,11 +9,11 @@ const { MvSheet, MvSheetOverShell, MvItemDialog, MvDialogOverSheet, MvDialogMobi
 const MW = 1200, MPHONE = 390;
 
 /* moldura neutra com caption (igual ao produtos/equipe canvas) */
-function MFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, toast }) {
+function MFrame({ tone = "empty", name, refLabel, children, pad = 28, center = true, justify = "center", toast }) {
   return (
     <div className="wf" style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--wf-field)", position: "relative" }}>
       <WStateCap tone={tone} name={name} refLabel={refLabel} />
-      <div style={{ flex: 1, padding: pad, background: "var(--wf-fieldbg)", display: "flex", alignItems: center ? "center" : "flex-start", justifyContent: "center", position: "relative" }}>
+      <div style={{ flex: 1, padding: pad, background: "var(--wf-fieldbg)", display: "flex", alignItems: center ? "center" : "flex-start", justifyContent: justify, position: "relative" }}>
         {children}
       </div>
       {toast && <div className="mv-toast-anchor">{toast}</div>}
@@ -102,12 +102,12 @@ function MovCanvas() {
             <MvHistory scenario="empty" />
           </MFrame>
         </DCArtboard>
-        <DCArtboard id="st-prefiltered" label="Pré-filtrado por produto (via atalho)" width={MW} height={680}>
+        <DCArtboard id="st-prefiltered" label="Pré-filtrado por produto (via atalho)" width={MW} height={1072}>
           <MFrame tone="empty" name="Campo preenchido + badge de filtro ativo com X" refLabel="RF023" center={false} pad={0}>
             <MvHistoryShell scenario="prefiltered" />
           </MFrame>
         </DCArtboard>
-        <DCArtboard id="st-sales" label="Recorte por papel · Vendedor (leitura)" width={MW} height={680}>
+        <DCArtboard id="st-sales" label="Recorte por papel · Vendedor (leitura)" width={MW} height={1212}>
           <MFrame tone="empty" name="Sem CTA, sem filtro de responsável, sem colunas de custo" refLabel="RN057" center={false} pad={0}>
             <MvHistoryShell scenario="base" role="sales" />
           </MFrame>
@@ -116,15 +116,15 @@ function MovCanvas() {
           <MovRef />
         </DCArtboard>
         <DCArtboard id="st-period-presets" label="Filtro de período · presets" width={520} height={420}>
-          <MFrame tone="empty" name="Select de preset aberto + intervalo de datas" refLabel="RF023" center={false}>
+          <MFrame tone="empty" name="Select de preset aberto + intervalo de datas" refLabel="RF023" center={false} justify="flex-start">
             <div className="wf" style={{ display: "flex", gap: 10, alignItems: "flex-start", paddingTop: 6 }}>
               <MvPresetSelect value="Personalizado" open />
               <MvDateRange from="02/05/2026" to="31/05/2026" />
             </div>
           </MFrame>
         </DCArtboard>
-        <DCArtboard id="st-period-calendar" label="Filtro de período · calendário (dois meses)" width={620} height={420}>
-          <MFrame tone="empty" name="Range picker — início e fim destacados" refLabel="RF023" center={false}>
+        <DCArtboard id="st-period-calendar" label="Filtro de período · calendário (dois meses)" width={760} height={420}>
+          <MFrame tone="empty" name="Range picker — início e fim destacados" refLabel="RF023" center={false} justify="flex-start">
             <div className="wf" style={{ display: "flex", gap: 10, alignItems: "flex-start", paddingTop: 6 }}>
               <MvPresetSelect value="Personalizado" />
               <MvDateRange from="02/05/2026" to="31/05/2026" open />

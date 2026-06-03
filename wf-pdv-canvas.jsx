@@ -1,12 +1,12 @@
-/* Inventto — Wireframe · Módulo Vendas no Balcão / PDV · montagem do canvas (Superfície 2 · 2.6) */
+/* Inventto — Wireframe · Módulo Vendas no Balcão / PDV · montagem do canvas
+   (Superfície 2 · 2.6) — revisão jun/2026. */
 
 const {
-  PDV_I, PvCartPanel, PvDiscountSection, PvCustomerSection,
-  NewSale, NoCatalogBlock, NewSaleShell,
+  PDV_I, PvCatalogScreen, AddProductDialog, CartSheet, NoCatalogBlock, NewSaleShell,
 } = window.PDV;
 const {
-  SalesConsult, SalesConsultShell, NewSaleMobile, CartSheet, CartSheetOverMobile,
-  SalesConsultMobile,
+  NewSaleMobile, AddDialogOverDesktop, AddDialogOverMobile,
+  CartSheetOverDesktop, CartSheetOverMobile,
 } = window.PDVV;
 
 const CW = 1200, CPHONE = 390;
@@ -29,13 +29,13 @@ function PdvLegend() {
   return (
     <div className="wf-legend wf">
       <h3>Wireframe · Superfície 2 — Vendas no Balcão / PDV (2.6)</h3>
-      <p className="wf-legsub">Onde se <b>vende presencialmente</b>: a <b>Nova venda</b> (/pdv) — split-screen com catálogo à esquerda e o painel do carrinho à direita, com desconto opcional (RN073) e cliente opcional (RN072) — e a <b>Consulta de vendas</b> (/pdv/vendas), imutável na v1. Lo-fi cinza-escala; cor <b>funcional apenas</b>: âmbar p/ estoque insuficiente, tijolo p/ desconto e erro, verde p/ sucesso.</p>
+      <p className="wf-legsub">Onde se <b>vende presencialmente</b>. <b>Layout único</b> (mobile e desktop): a tela inteira é o <b>catálogo</b>; o carrinho fica fora de vista durante a montagem. Clique num produto → <b>Dialog “Adicionar produto”</b> (quantidade + desconto por item · RN073). O <b>FAB</b> abre o <b>Sheet “Venda atual”</b> p/ revisar e confirmar. A <b>consulta de vendas saiu deste módulo</b> → vive em <span style={{ fontFamily: "var(--wf-mono)" }}>/movimentacoes</span> (Saída · motivo Venda). Cor <b>funcional apenas</b>.</p>
       {sw("var(--pd-warning-bg2)", "var(--pd-warning)", "Âmbar — item com estoque insuficiente (RN055/RN070)")}
       {sw("var(--wf-err-bg)", "var(--wf-err)", "Tijolo — valor de desconto e erro")}
-      {sw("var(--wf-ok-bg)", "var(--wf-ok)", "Verde dessat. — sucesso (cliente reconhecido / toast)")}
-      {sw("var(--wf-ink)", "var(--wf-ink)", "Preenchimento sólido = CTA primária (Confirmar venda)")}
+      {sw("var(--wf-ok-bg)", "var(--wf-ok)", "Verde dessat. — cliente reconhecido / sucesso")}
+      {sw("var(--wf-ink)", "var(--wf-ink)", "Preenchimento sólido = CTA primária + FAB")}
       {sw("var(--wf-note-bg)", "var(--wf-note)", "Ardósia = nota de regra (RN)")}
-      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF027–RF028 · RN068–RN073 · RN055. Microcopy §2, §4, §5.</div>
+      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF027 · RN055 · RN068–RN073. Microcopy §2, §5.</div>
     </div>
   );
 }
@@ -45,123 +45,124 @@ function PdvCanvas() {
     <DesignCanvas>
 
       {/* ───── ANATOMIA ───── */}
-      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="Nova venda /pdv dentro do App Shell · split-screen: catálogo (flex-1) + painel do carrinho (w-96) — RF027">
-        <DCArtboard id="legend" label="Legenda" width={600} height={470}>
-          <div style={{ height: "100%", display: "grid", placeItems: "center", background: "var(--wf-fieldbg)", padding: 20 }}><PdvLegend /></div>
+      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="/pdv dentro do App Shell · catálogo em tela cheia (sem split-screen) + FAB do carrinho — RF027">
+        <DCArtboard id="legend" label="Legenda" width={640} height={460}>
+          <div style={{ height: "100%", boxSizing: "border-box", display: "grid", placeItems: "center", background: "var(--wf-fieldbg)", padding: 20 }}><PdvLegend /></div>
         </DCArtboard>
-        <DCArtboard id="newsale-desk" label="Nova venda · Desktop · carrinho com itens" width={CW} height={720}>
-          <NewSaleShell cart="filled" />
+        <DCArtboard id="newsale-desk" label="Nova venda · Desktop · catálogo + FAB (3 itens no carrinho)" width={CW} height={720}>
+          <NewSaleShell scenario="base" fab={3} />
         </DCArtboard>
-        <DCArtboard id="newsale-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={CW} height={720}>
-          <NewSaleShell cart="filled" collapsed />
+        <DCArtboard id="newsale-desk-collapsed" label="Mesma tela · sidebar recolhida (modelo do App Shell)" width={CW} height={736}>
+          <NewSaleShell scenario="base" fab={3} collapsed />
         </DCArtboard>
-        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={470} height={720}>
+        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={480} height={720}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 12, justifyContent: "center" }}>
-            <WNote><b>Split-screen (lg+).</b> Catálogo do PDV à esquerda (busca + filtro + grade); painel <b>“Venda atual”</b> fixo à direita. Clique no produto → entra no carrinho com quantidade 1; se já existe, incrementa.</WNote>
+            <WNote><b>Layout único.</b> Mobile e desktop usam a mesma estrutura: tela inteira dedicada ao catálogo. O carrinho não fica visível durante a montagem — o vendedor foca em selecionar produtos.</WNote>
+            <WNote><b>Adição via Dialog (2.6.1a).</b> Clique no card ou no <span style={{ fontFamily: "var(--wf-mono)" }}>+</span> abre um Dialog para definir <b>quantidade</b> e <b>desconto por item</b> (RN073) antes de incluir no carrinho.</WNote>
+            <WNote><b>FAB → Sheet (2.6.1b).</b> O botão flutuante (canto inferior direito) é <b>oculto com carrinho vazio</b> e aparece ao primeiro item, com contador. Abre o Sheet “Venda atual” para revisar e confirmar.</WNote>
             <WNote><b>Venda = pedido pos (RN068).</b> Confirmar cria um pedido <span style={{ fontFamily: "var(--wf-mono)" }}>pos</span> confirmado, gera saída de estoque (motivo “Venda”) e vincula/cria o cliente.</WNote>
-            <WNote><b>Desconto opcional (RN073).</b> Switch liga campo + toggle R$/%. Registra referência, desconto e preço final. Sem limite por papel na v1.</WNote>
-            <WNote><b>Cliente opcional (RN072).</b> Telefone busca no CRM; se encontrado, mostra o nome; se não, surge o campo “Nome”.</WNote>
+            <WNote><b>Consulta migrada.</b> O histórico de vendas de balcão não tem tela própria: é consultado em <span style={{ fontFamily: "var(--wf-mono)" }}>/movimentacoes</span> (Saída · motivo Venda).</WNote>
             <WNote><b>Acesso idêntico (RN071).</b> Sales, Manager e Owner usam o PDV da mesma forma.</WNote>
-          </div>
-        </DCArtboard>
-        <DCArtboard id="cart-solo" label="Painel “Venda atual” · referência" width={384} height={720}>
-          <div style={{ height: "100%", display: "flex", background: "var(--wf-fieldbg)" }}>
-            <PvCartPanel state="filled" />
           </div>
         </DCArtboard>
       </DCSection>
 
-      {/* ───── NOVA VENDA: ESTADOS ───── */}
-      <DCSection id="estados" title="01 · Nova venda · estados do carrinho" subtitle="Bloqueio sem catálogo · carrinho vazio · estoque insuficiente · desconto · cliente · registrando · sucesso — RN068–073, RN055">
+      {/* ───── CATÁLOGO: ESTADOS ───── */}
+      <DCSection id="catalogo" title="01 · Catálogo · estados" subtitle="Bloqueio sem catálogo · carregando · busca sem resultado · carrinho vazio (FAB oculto) — RN069, RN055">
         <DCArtboard id="st-block" label="Bloqueio · sem catálogo PDV vinculado" width={CW} height={620}>
           <PFrame tone="empty" name="“Vincule um catálogo ao PDV para começar a vender.” + [Escolher catálogo]" refLabel="RN069 · §2" center={false} pad={0}>
             <NewSaleShell block />
           </PFrame>
         </DCArtboard>
-        <DCArtboard id="st-empty" label="Carrinho vazio" width={384} height={560}>
-          <PFrame tone="empty" name="“Adicione produtos para iniciar a venda.” · CTA desabilitada" refLabel="§2">
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="empty" />
-            </div>
+        <DCArtboard id="st-loading" label="Catálogo carregando · skeleton de cards" width={CW} height={680}>
+          <PFrame tone="load" name="Skeleton enquanto o catálogo carrega" refLabel="Matriz" center={false} pad={0}>
+            <NewSaleShell scenario="loading" fab={0} />
           </PFrame>
         </DCArtboard>
-        <DCArtboard id="st-warn" label="Item com estoque insuficiente · CTA off" width={384} height={680}>
-          <PFrame tone="err" name="Borda âmbar + “Apenas N disponíveis.” · Confirmar desabilitado" refLabel="RN055/RN070">
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="warn" />
-            </div>
+        <DCArtboard id="st-noresult" label="Busca sem resultado" width={CW} height={620}>
+          <PFrame tone="empty" name="“Nenhum produto encontrado para ‘{termo}’.”" refLabel="§2" center={false} pad={0}>
+            <NewSaleShell scenario="noresult" fab={0} />
           </PFrame>
         </DCArtboard>
-        <DCArtboard id="st-discount" label="Desconto aplicado (R$ / %)" width={384} height={760}>
-          <PFrame tone="empty" name="Switch ligado · referência · desconto · preço final" refLabel="RN073">
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="discount" />
-            </div>
-          </PFrame>
-        </DCArtboard>
-        <DCArtboard id="st-customer" label="Cliente reconhecido no CRM" width={384} height={760}>
-          <PFrame tone="ok" name="Telefone → busca CRM → exibe nome do cliente" refLabel="RN072">
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="customer-found" />
-            </div>
-          </PFrame>
-        </DCArtboard>
-        <DCArtboard id="st-customer-new" label="Cliente novo · campo “Nome” aparece" width={384} height={780}>
-          <PFrame tone="empty" name="Telefone sem match → surge campo Nome" refLabel="RN072">
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="customer-new" />
-            </div>
-          </PFrame>
-        </DCArtboard>
-        <DCArtboard id="st-saving" label="Registrando venda" width={384} height={680}>
-          <PFrame tone="load" name="“Registrando…” → toast “Venda registrada.” + carrinho limpo" refLabel="§5" toast={<WToast ok>Venda registrada.</WToast>}>
-            <div style={{ height: "100%", display: "flex", border: "1.5px solid var(--wf-line)", borderRadius: 14, overflow: "hidden", background: "var(--wf-field)" }}>
-              <PvCartPanel state="saving" />
-            </div>
+        <DCArtboard id="st-empty-cart" label="Carrinho vazio · FAB oculto" width={CW} height={620}>
+          <PFrame tone="empty" name="Sem itens no carrinho → o FAB não aparece" refLabel="Matriz" center={false} pad={0}>
+            <NewSaleShell scenario="base" fab={0} />
           </PFrame>
         </DCArtboard>
       </DCSection>
 
-      {/* ───── CONSULTA DE VENDAS ───── */}
-      <DCSection id="consulta" title="02 · Consulta de vendas · /pdv/vendas" subtitle="Tabela imutável (sem ações) · sub-row expansível com itens · vazio · recorte por papel — RF028, RN017">
-        <DCArtboard id="cons-base" label="Consulta · Owner/Manager (todas as vendas)" width={CW} height={640}>
-          <SalesConsultShell scenario="base" role="owner" />
-        </DCArtboard>
-        <DCArtboard id="cons-open" label="Sub-row expandida · itens da venda" width={CW} height={680}>
-          <PFrame tone="empty" name="ChevronDown abre os itens da venda" refLabel="RF028" center={false} pad={0}>
-            <SalesConsultShell scenario="base" role="owner" openFor="v1" />
+      {/* ───── DIALOG ADICIONAR PRODUTO ───── */}
+      <DCSection id="dialog" title="02 · Dialog · Adicionar produto (2.6.1a)" subtitle="max-w-sm · quantidade + desconto por item · limite de saldo · desconto inválido — RN073, RN055">
+        <DCArtboard id="dlg-base" label="Base · quantidade 1 · sem desconto" width={520} height={400}>
+          <PFrame tone="empty" name="Thumbnail + nome + preço de referência · quantidade · switch de desconto" refLabel="2.6.1a">
+            <AddProductDialog variant="base" standalone />
           </PFrame>
         </DCArtboard>
-        <DCArtboard id="cons-empty" label="Sem vendas no período" width={1000} height={480}>
-          <PFrame tone="empty" name="“Nenhuma venda neste período.”" refLabel="§4" center={false}>
-            <SalesConsult scenario="empty" role="owner" />
+        <DCArtboard id="dlg-discount" label="Desconto aplicado (R$)" width={520} height={540}>
+          <PFrame tone="empty" name="Switch ligado · referência · desconto · preço final" refLabel="RN073">
+            <AddProductDialog variant="discount" standalone />
           </PFrame>
         </DCArtboard>
-        <DCArtboard id="cons-sales" label="Recorte · Vendedor (só as próprias, sem filtro de vendedor)" width={CW} height={600}>
-          <PFrame tone="empty" name="Sem coluna/filtro de vendedor · vê apenas as próprias" refLabel="RN017" center={false} pad={0}>
-            <SalesConsultShell scenario="base" role="sales" />
+        <DCArtboard id="dlg-pct" label="Desconto aplicado (%)" width={520} height={540}>
+          <PFrame tone="empty" name="Toggle em % · recalcula desconto e preço final" refLabel="RN073">
+            <AddProductDialog variant="pct" standalone />
           </PFrame>
+        </DCArtboard>
+        <DCArtboard id="dlg-limit" label="Quantidade no limite do saldo" width={520} height={400}>
+          <PFrame tone="err" name="Botão + desabilitado + “Apenas N disponíveis.”" refLabel="RN055/RN070">
+            <AddProductDialog variant="limit" standalone />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="dlg-invalid" label="Desconto inválido · Adicionar desabilitado" width={520} height={500}>
+          <PFrame tone="err" name="Input em erro + “Adicionar” desabilitado" refLabel="RN073">
+            <AddProductDialog variant="invalid" standalone />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="dlg-over" label="Dialog sobre o catálogo · Desktop" width={CW} height={720}>
+          <AddDialogOverDesktop variant="discount" />
+        </DCArtboard>
+      </DCSection>
+
+      {/* ───── SHEET DO CARRINHO ───── */}
+      <DCSection id="sheet" title="03 · Sheet · Carrinho da venda (2.6.1b)" subtitle="Lateral direita (desktop) · itens c/ preço de referência + final · cliente · resumo · confirmar — RN072, RN073, RN055">
+        <DCArtboard id="sh-filled" label="Carrinho com itens · desconto por item + cliente" width={520} height={820}>
+          <PFrame tone="ok" name="Itens (ref + final) · cliente reconhecido · resumo · Confirmar venda" refLabel="2.6.1b">
+            <CartSheet standalone state="filled" />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="sh-empty" label="Carrinho vazio (Sheet aberto)" width={520} height={520}>
+          <PFrame tone="empty" name="“Adicione produtos para iniciar a venda.” + [Ver catálogo]" refLabel="Matriz">
+            <CartSheet standalone state="empty" />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="sh-warn" label="Item com estoque insuficiente · CTA off" width={520} height={780}>
+          <PFrame tone="err" name="Borda âmbar + “Apenas N disponíveis.” · Confirmar desabilitado" refLabel="RN055/RN070">
+            <CartSheet standalone state="warn" />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="sh-saving" label="Registrando venda" width={520} height={820}>
+          <PFrame tone="load" name="“Registrando…” → toast “Venda registrada.” + carrinho limpo + FAB some" refLabel="§5" toast={<WToast ok>Venda registrada.</WToast>}>
+            <CartSheet standalone state="saving" />
+          </PFrame>
+        </DCArtboard>
+        <DCArtboard id="sh-over" label="Sheet sobre o catálogo · Desktop (lateral direita)" width={CW} height={760}>
+          <CartSheetOverDesktop state="filled" />
         </DCArtboard>
       </DCSection>
 
       {/* ───── MOBILE ───── */}
-      <DCSection id="mobile" title="03 · Mobile (~390px)" subtitle="Nova venda: busca + barra fixa de carrinho · Sheet do carrinho · consulta em cards">
-        <DCArtboard id="mob-newsale" label="Nova venda · busca + barra fixa" width={CPHONE} height={760}>
-          <NewSaleMobile />
+      <DCSection id="mobile" title="04 · Mobile (~390px)" subtitle="Mesmo layout único: catálogo tela cheia + FAB · Dialog centralizado · Sheet de baixo">
+        <DCArtboard id="mob-catalog" label="Catálogo · busca + grade + FAB" width={CPHONE} height={760}>
+          <NewSaleMobile scenario="base" fab={3} />
         </DCArtboard>
-        <DCArtboard id="mob-sheet" label="Sheet do carrinho (sobre a tela)" width={CPHONE} height={760}>
-          <CartSheetOverMobile />
+        <DCArtboard id="mob-empty" label="Carrinho vazio · FAB oculto" width={CPHONE} height={760}>
+          <NewSaleMobile scenario="base" fab={0} />
         </DCArtboard>
-        <DCArtboard id="mob-sheet-solo" label="Sheet do carrinho · standalone" width={420} height={720}>
-          <PFrame tone="empty" name="Itens + desconto + cliente + resumo + CTA" refLabel="2.6.1">
-            <CartSheet standalone state="discount" />
-          </PFrame>
+        <DCArtboard id="mob-dialog" label="Dialog adicionar (sobre o catálogo)" width={CPHONE} height={760}>
+          <AddDialogOverMobile variant="discount" />
         </DCArtboard>
-        <DCArtboard id="mob-consulta" label="Consulta de vendas · cards" width={CPHONE} height={680}>
-          <SalesConsultMobile role="owner" />
-        </DCArtboard>
-        <DCArtboard id="mob-consulta-sales" label="Consulta · Vendedor (sem filtro de vendedor)" width={CPHONE} height={680}>
-          <SalesConsultMobile role="sales" />
+        <DCArtboard id="mob-sheet" label="Sheet do carrinho (de baixo)" width={CPHONE} height={760}>
+          <CartSheetOverMobile state="filled" />
         </DCArtboard>
       </DCSection>
 
