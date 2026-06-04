@@ -143,7 +143,6 @@ function OrderConfirmed() {
           <div className="sf-confirm-row"><span className="sf-cr-k">Pagamento</span><span className="sf-cr-v">Pix</span></div>
           <div className="sf-confirm-row is-total"><span className="sf-cr-k">Total</span><span className="sf-cr-v">R$ 521,90</span></div>
         </div>
-        <SfBtn variant="primary" icon={STORE_I.whats}>Chamar no WhatsApp agora</SfBtn>
         <SfBtn variant="ghost">Voltar para a loja</SfBtn>
       </div>
     </div>

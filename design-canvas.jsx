@@ -919,8 +919,8 @@ function DCFocusOverlay({ entry, sectionMeta, sectionOrder }) {
       </div>
 
       {/* card centered, label + index below — only the card itself stops
-                 propagation so any backdrop click (including the margins around
-                 the card) exits focus */}
+                                  propagation so any backdrop click (including the margins around
+                                  the card) exits focus */}
       <div
         style={{ position: 'absolute', top: 64, bottom: 56, left: 100, right: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
         <div onClick={(e) => e.stopPropagation()} style={{ width: width * scale, height: height * scale, position: 'relative' }}>

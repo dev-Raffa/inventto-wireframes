@@ -108,9 +108,9 @@
 .wf-note b { font-weight: 700; }
 
 /* caption de estado (cards de variação) */
-.wf-statecap { padding: 11px 14px; border-bottom: 1px solid var(--wf-line-soft); background: var(--wf-fieldbg); display: flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+.wf-statecap { padding: 11px 14px; border-bottom: 1px solid var(--wf-line-soft); background: var(--wf-fieldbg); display: flex; align-items: center; gap: 9px; flex: 0 0 auto; flex-wrap: wrap; }
 .wf-statecap .wf-statedot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
-.wf-statecap .wf-statename { font-size: 12px; font-weight: 700; color: var(--wf-ink); }
+.wf-statecap .wf-statename { font-size: 12px; font-weight: 700; color: var(--wf-ink); flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
 .wf-statecap .wf-stateref { font-family: var(--wf-mono); font-size: 9.5px; color: var(--wf-faint); margin-left: auto; }
 .dot-empty { background: var(--wf-faint); }
 .dot-err { background: var(--wf-err); }

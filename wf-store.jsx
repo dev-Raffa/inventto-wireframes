@@ -262,7 +262,6 @@ function Vitrine({ scenario = "open", layout = "grid", cart = false, aside = fal
         </div>
       </div>
       {cart && <SfFab />}
-      <SfFooter orderDisabled={orderDisabled} row={aside} />
     </div>
   );
 }

@@ -24,6 +24,11 @@
   --sf-feat:   #9a7b3f;                            /* destaque (estrela) */
 }
 
+/* box-sizing no escopo da vitrine (o reset global vive em .wf; o storefront
+   usa .sf, então sem isto inputs/botões com width:100% + padding + borda
+   estouram o container ~30px e recortam no eixo X). */
+.sf, .sf *, .sf *::before, .sf *::after { box-sizing: border-box; }
+
 /* ═══ MOLDURA: navegador desktop / telefone (superfície pública) ═══ */
 .sf-browser { display: flex; flex-direction: column; height: 100%; border: 1.5px solid var(--wf-line); border-radius: 16px; overflow: hidden; background: var(--sf-bg); box-shadow: 0 12px 32px rgba(0,0,0,.10); }
 .sf-browser-bar { flex: 0 0 auto; height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 14px; background: var(--wf-fieldbg); border-bottom: 1px solid var(--wf-line-soft); }
@@ -128,7 +133,7 @@
 .sf-pcard.is-listcard .sf-listbadge { flex: 0 0 auto; margin-left: auto; }
 
 /* ── botão flutuante de carrinho ── */
-.sf-fab { position: absolute; left: 50%; transform: translateX(-50%); bottom: 78px; z-index: 6; display: inline-flex; align-items: center; gap: 11px; height: 50px; padding: 0 14px 0 18px; border-radius: 999px; background: var(--sf-primary); color: var(--sf-primary-fg); box-shadow: 0 8px 26px rgba(0,0,0,.24); font-weight: 600; font-size: 14px; }
+.sf-fab { position: absolute; right: 18px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 6; display: inline-flex; align-items: center; gap: 11px; height: 50px; padding: 0 14px 0 18px; border-radius: 999px; background: var(--sf-primary); color: var(--sf-primary-fg); box-shadow: 0 8px 26px rgba(0,0,0,.24); font-weight: 600; font-size: 14px; }
 .sf-fab svg { width: 19px; height: 19px; }
 .sf-fab .sf-fab-count { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,.22); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
 .sf-fab .sf-fab-total { margin-left: 2px; font-variant-numeric: tabular-nums; }
@@ -200,6 +205,12 @@
 .sf-stepper .sf-step-val { width: 46px; text-align: center; font-size: 15px; font-weight: 700; color: var(--sf-text); font-variant-numeric: tabular-nums; }
 .sf-stepper.is-disabled { opacity: .42; }
 .sf-detail-cta { margin-top: 22px; }
+
+/* barra de ação fixa no rodapé (detalhe desktop) — botão "Adicionar ao pedido"
+   ancorado no bottom da tela; preço à esquerda, CTA à direita */
+.sf-detail-footbar { margin-top: auto; position: sticky; bottom: 0; z-index: 5; background: var(--sf-card); border-top: 1.5px solid var(--sf-line); padding: 14px 22px calc(14px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 18px; box-shadow: 0 -8px 24px rgba(0,0,0,.06); }
+.sf-detail-footbar .sf-fb-price { margin-right: auto; font-size: 19px; font-weight: 700; color: var(--sf-primary); font-variant-numeric: tabular-nums; }
+.sf-detail-footbar .sf-btn { width: auto; min-width: 240px; padding: 0 30px; }
 
 /* ═══ 2.7.4 CARRINHO (sheet/drawer) ═══ */
 .sf-sheet { width: 100%; max-width: 420px; background: var(--sf-card); display: flex; flex-direction: column; height: 100%; }
@@ -283,8 +294,8 @@
 .sf-sum-items { padding: 6px 16px; }
 .sf-sum-item { display: flex; gap: 11px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--sf-line-soft); }
 .sf-sum-item:last-child { border-bottom: 0; }
-.sf-sum-thumb { width: 44px; height: 44px; border-radius: 9px; background: var(--sf-hero); position: relative; overflow: hidden; flex: 0 0 auto; border: 1.5px solid var(--sf-line); }
-.sf-sum-thumb::after { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,.05) 0 1px, transparent 1px 6px); }
+.sf-sum-thumb { width: 44px; height: 44px; border-radius: 9px; background: var(--sf-hero); position: relative; flex: 0 0 auto; border: 1.5px solid var(--sf-line); }
+.sf-sum-thumb::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,.05) 0 1px, transparent 1px 6px); }
 .sf-sum-thumb .sf-sum-qty { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: var(--sf-primary); color: var(--sf-primary-fg); font-size: 10px; font-weight: 700; display: grid; place-items: center; border: 1.5px solid var(--sf-card); }
 .sf-sum-meta { flex: 1; min-width: 0; }
 .sf-sum-name { font-size: 12.5px; font-weight: 600; color: var(--sf-text); }

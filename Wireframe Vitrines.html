@@ -3,15 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" href="icon.svg" type="image/svg+xml" />
-<title>Inventto · Wireframe — Módulo Storefront / Vitrine pública (Superfície 3 · 2.7)</title>
+<title>Inventto · Wireframe — Módulo Vitrines / Storefronts (Superfície 2 · 2.7)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="wf.css" />
+<link rel="stylesheet" href="wf-shell.css" />
 <link rel="stylesheet" href="wf-produtos.css" />
+<link rel="stylesheet" href="wf-mov.css" />
 <link rel="stylesheet" href="wf-cat.css" />
-<link rel="stylesheet" href="wf-store.css" />
+<link rel="stylesheet" href="wf-pedidos.css" />
+<link rel="stylesheet" href="wf-org.css" />
+<link rel="stylesheet" href="wf-vitrines.css" />
 <style>
   html, body { margin: 0; padding: 0; background: #f0eee9; }
   #root { width: 100vw; height: 100vh; }
@@ -50,7 +53,7 @@
   <div style="width:100%;height:100%;display:grid;place-items:center;background:#3a3631;color:#efece6;font-family:sans-serif;">
     <div style="text-align:center;">
       <div style="font-size:34px;font-weight:700;letter-spacing:-1px;">Inventto</div>
-      <div style="font-size:13px;opacity:.7;margin-top:6px;font-family:monospace;">wireframe · storefront</div>
+      <div style="font-size:13px;opacity:.7;margin-top:6px;font-family:monospace;">wireframe · vitrines</div>
     </div>
   </div>
 </template>
@@ -61,12 +64,12 @@
 
 <script type="text/babel" src="design-canvas.jsx"></script>
 <script type="text/babel" src="wf-kit.jsx"></script>
-<script type="text/babel" src="wf-store.jsx"></script>
-<script type="text/babel" src="wf-store-detail.jsx"></script>
-<script type="text/babel" src="wf-store-checkout.jsx"></script>
-<script type="text/babel" src="wf-store-canvas.jsx"></script>
+<script type="text/babel" src="wf-shell.jsx"></script>
+<script type="text/babel" src="wf-vitrines.jsx"></script>
+<script type="text/babel" src="wf-vitrines-config.jsx"></script>
+<script type="text/babel" src="wf-vitrines-canvas.jsx"></script>
 <script type="text/babel">
-  ReactDOM.createRoot(document.getElementById('root')).render(<StoreCanvas />);
+  ReactDOM.createRoot(document.getElementById('root')).render(<VtCanvas />);
 </script>
 </body>
 </html>

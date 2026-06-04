@@ -2,10 +2,10 @@
 
 const {
   DA_I, DashShell, DashView, SalesBlock, AttnBlock, ActivityBlock,
-  Onboarding, OnboardingShell, DashErrorShell, DashSkeleton, DashMobile, OnboardingMobile,
+  Onboarding, OnboardingShell, DashErrorShell, DashSkeleton, DashMobile, OnboardingMobile
 } = window.DASH;
 
-const CW = 1200, CPHONE = 390;
+const CW = 1200,CPHONE = 390;
 
 /* moldura neutra com caption (igual aos demais módulos) */
 function DaFrame({ tone = "empty", name, refLabel, children, pad = 0 }) {
@@ -13,17 +13,17 @@ function DaFrame({ tone = "empty", name, refLabel, children, pad = 0 }) {
     <div className="da-frame wf">
       <WStateCap tone={tone} name={name} refLabel={refLabel} />
       <div className="da-frame-body" style={{ padding: pad }}>{children}</div>
-    </div>
-  );
+    </div>);
+
 }
 
 /* caixa neutra p/ blocos isolados (fundo de área) */
 function BlockBox({ children, w = 760 }) {
   return (
-    <div style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 26, display: "flex", alignItems: "flex-start", justifyContent: "center", overflow: "auto" }}>
+    <div style={{ background: "var(--wf-fieldbg)", padding: 26, display: "flex", alignItems: "flex-start", justifyContent: "center", overflow: "auto", height: "740px" }}>
       <div className="wf" style={{ width: w, maxWidth: "100%" }}>{children}</div>
-    </div>
-  );
+    </div>);
+
 }
 
 function DaLegend() {
@@ -31,16 +31,16 @@ function DaLegend() {
   return (
     <div className="wf-legend wf">
       <h3>Wireframe · Superfície 2 — Dashboard (2.9)</h3>
-      <p className="wf-legsub">A <b>tela inicial pós-login</b> (RN092): visão operacional rápida em <b>três blocos verticais</b> — <b>atenção imediata</b> (RF036) · <b>resumo de vendas</b> com gráfico (RF037) · <b>atividade recente e atalhos</b> (RF038). Adaptada por papel (RN091): Vendedor, Gerente e Dono veem recortes distintos. Lo-fi cinza-escala; cor <b>funcional apenas</b>.</p>
+      <p className="wf-legsub">A <b>tela inicial pós-login</b> (RN091): visão operacional rápida em <b>três blocos verticais</b> — <b>atenção imediata</b> (RF036) · <b>resumo de vendas</b> com gráfico (RF037) · <b>atividade recente e atalhos</b> (RF038). Adaptada por papel (RN091): Vendedor, Gerente e Dono veem recortes distintos. Lo-fi cinza-escala; cor <b>funcional apenas</b>.</p>
       {sw("var(--da-warning-bg)", "var(--da-warning)", "Âmbar — pedidos pendentes / expirando (warning)")}
       {sw("var(--da-critical-bg)", "var(--da-critical)", "Tijolo — estoque crítico ou zerado (critical)")}
       {sw("var(--da-healthy-bg)", "var(--da-healthy)", "Verde dessat. — entrada / confirmado / tendência positiva")}
       {sw("var(--da-zeroed-bg)", "var(--wf-line)", "Neutro — pedido expirado / encerrado (zeroed)")}
-      {sw("var(--wf-ink)", "var(--wf-ink)", "Preenchimento sólido = atalho primário (Nova venda) e linha do gráfico")}
+      {sw("var(--wf-ink)", "var(--wf-ink)", "Preenchimento sólido = atalho primário (Nova venda); banda escura/clara = gráfico de área (Pedidos + Balcão)")}
       {sw("var(--wf-note-bg)", "var(--wf-note)", "Ardósia = nota de regra (RN)")}
-      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF036–RF038 · RN089–RN092. Microcopy §4.</div>
-    </div>
-  );
+      <div className="wf-legrow" style={{ marginTop: 14, color: "var(--wf-muted)", fontSize: 11.5, fontFamily: "var(--wf-mono)" }}>Refs: RF036–RF038 · RN089–RN091. Microcopy §4.</div>
+    </div>);
+
 }
 
 function DashCanvas() {
@@ -48,36 +48,36 @@ function DashCanvas() {
     <DesignCanvas>
 
       {/* ───── ANATOMIA ───── */}
-      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="Dashboard (/) dentro do App Shell · grid 2 colunas no lg+ — Atenção + Atividade à esquerda, Vendas (com gráfico) à direita. Três blocos: RF036 · RF037 · RF038">
+      <DCSection id="anatomia" title="00 · Anatomia & legenda" subtitle="Dashboard (/) dentro do App Shell · coluna única — cada bloco ocupa uma linha completa, na ordem Atenção → Vendas → Atividade. Três blocos: RF036 · RF037 · RF038">
         <DCArtboard id="legend" label="Legenda" width={600} height={470}>
           <div style={{ height: "100%", display: "grid", placeItems: "center", background: "var(--wf-fieldbg)", padding: 20 }}><DaLegend /></div>
         </DCArtboard>
-        <DCArtboard id="dash-desk" label="Dashboard · Desktop · Dono (visão completa)" width={CW} height={760}>
+        <DCArtboard id="dash-desk" label="Dashboard · Desktop · Dono (visão completa)" width={CW} height={1000}>
           <DashShell role="owner" period="30dias" />
         </DCArtboard>
-        <DCArtboard id="dash-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={CW} height={760}>
+        <DCArtboard id="dash-desk-collapsed" label="Mesma tela · sidebar recolhida (collapsible=icon · modelo do App Shell)" width={CW} height={1000}>
           <DashShell role="owner" period="30dias" collapsed />
         </DCArtboard>
-        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={470} height={760}>
+        <DCArtboard id="anatomia-nota" label="Notas de estrutura" width={470} height={1000}>
           <div className="wf" style={{ height: "100%", background: "var(--wf-fieldbg)", padding: 24, display: "flex", flexDirection: "column", gap: 12, justifyContent: "center" }}>
-            <WNote><b>Tela inicial pós-login (RN092).</b> Rota <b>/</b>. Enquanto o Dashboard não existia, a entrada era <b>/produtos</b> (RN091).</WNote>
-            <WNote><b>Arranjo vertical em três níveis.</b> Atenção → Vendas → Atividade. No <b>lg+</b>, grid 2 colunas: Atenção e Atividade à esquerda; Vendas com gráfico à direita. No mobile, empilha na ordem.</WNote>
+            <WNote><b>Tela inicial pós-login (RN091).</b> Rota <b>/</b>. Enquanto o Dashboard não está implementado, a entrada é <b>/produtos</b> (RN091).</WNote>
+            <WNote><b>Coluna única — cada bloco em linha completa.</b> Atenção → Vendas → Atividade, empilhados na largura inteira. No bloco de Atividade, Movimentações e Pedidos ficam lado a lado. No mobile, tudo empilha na ordem.</WNote>
             <WNote><b>Atenção imediata (RF036).</b> Cards acionáveis: ícone + número grande + rótulo + <b>ChevronRight</b>. Cada card leva ao ponto de ação (/pedidos · /produtos filtrado). Valor <b>“0”</b> fica esmaecido, sem urgência.</WNote>
-            <WNote><b>Resumo de vendas (RF037).</b> SegmentedControl Hoje · 7 d · 30 d + faturamento + nº de vendas + <b>LineChart</b>. Margem e inventário a custo são <b>exclusivos do Dono</b> (RN091).</WNote>
+            <WNote><b>Resumo de vendas (RF037).</b> SegmentedControl Hoje · 7 d · 30 d + faturamento total + nº de vendas + <b>gráfico de área empilhado</b> (Balcão + Pedidos) com tooltip. Margem e inventário a custo são <b>exclusivos do Dono</b> (RN090).</WNote>
             <WNote><b>Degrada isolado (RN089).</b> Cada bloco carrega e falha sozinho — um card com erro não derruba a tela.</WNote>
           </div>
         </DCArtboard>
       </DCSection>
 
       {/* ───── RECORTE POR PAPEL ───── */}
-      <DCSection id="papel" title="01 · Recorte por papel (RN091)" subtitle="Uma tela, três papéis. Dono e Gerente veem a operação inteira; o Vendedor vê apenas o que pode acionar — sem alertas de estoque, sem faturamento da loja">
-        <DCArtboard id="role-owner" label="Dono · faturamento + margem + inventário a custo" width={CW} height={760}>
+      <DCSection id="papel" title="01 · Recorte por papel (RN090)" subtitle="Uma tela, três papéis. Dono e Gerente veem a operação inteira; o Vendedor vê apenas o que pode acionar — sem alertas de estoque, sem faturamento da loja">
+        <DCArtboard id="role-owner" label="Dono · faturamento + margem + inventário a custo" width={CW} height={1320}>
           <DashShell role="owner" period="30dias" />
         </DCArtboard>
-        <DCArtboard id="role-manager" label="Gerente · faturamento + gráfico, sem margem/inventário" width={CW} height={760}>
+        <DCArtboard id="role-manager" label="Gerente · faturamento + gráfico, sem margem/inventário" width={CW} height={1220}>
           <DashShell role="manager" period="7dias" />
         </DCArtboard>
-        <DCArtboard id="role-sales" label="Vendedor · só pedidos a expirar + vendas próprias" width={CW} height={680}>
+        <DCArtboard id="role-sales" label="Vendedor · só pedidos a expirar + vendas próprias" width={CW} height={850}>
           <DashShell role="sales" />
         </DCArtboard>
       </DCSection>
@@ -105,14 +105,14 @@ function DashCanvas() {
       </DCSection>
 
       {/* ───── BLOCO 2 · VENDAS ───── */}
-      <DCSection id="vendas" title="03 · Bloco 2 · Resumo de vendas (RF037)" subtitle="SegmentedControl de período + faturamento + LineChart · extras exclusivos do Dono (margem + inventário a custo) · contador simples do Vendedor">
-        <DCArtboard id="sales-hoje" label="Gerente · período Hoje" width={460} height={420}>
+      <DCSection id="vendas" title="03 · Bloco 2 · Resumo de vendas (RF037)" subtitle="SegmentedControl de período + faturamento total + gráfico de área empilhado (Balcão + Pedidos) com tooltip · extras exclusivos do Dono (margem + inventário a custo) · contador simples do Vendedor">
+        <DCArtboard id="sales-hoje" label="Gerente · período Hoje" width={460} height={470}>
           <BlockBox w={400}><SalesBlock role="manager" period="hoje" /></BlockBox>
         </DCArtboard>
-        <DCArtboard id="sales-7d" label="Gerente · período 7 dias" width={460} height={420}>
+        <DCArtboard id="sales-7d" label="Gerente · período 7 dias" width={460} height={470}>
           <BlockBox w={400}><SalesBlock role="manager" period="7dias" /></BlockBox>
         </DCArtboard>
-        <DCArtboard id="sales-owner" label="Dono · 30 dias + margem + inventário (RN091)" width={460} height={560}>
+        <DCArtboard id="sales-owner" label="Dono · 30 dias + margem + inventário (RN090)" width={460} height={610}>
           <BlockBox w={400}><SalesBlock role="owner" period="30dias" /></BlockBox>
         </DCArtboard>
         <DCArtboard id="sales-simple" label="Vendedor · contador simples, sem gráfico" width={460} height={300}>
@@ -122,7 +122,7 @@ function DashCanvas() {
 
       {/* ───── BLOCO 3 · ATIVIDADE ───── */}
       <DCSection id="atividade" title="04 · Bloco 3 · Atividade e atalhos (RF038)" subtitle="Mini-listas (movimentações + últimos pedidos) e atalhos em linha (Gerente/Dono) · vendas próprias + atalho PDV (Vendedor)">
-        <DCArtboard id="act-mo" label="Gerente / Dono · movimentações + pedidos + 3 atalhos" width={520} height={680}>
+        <DCArtboard id="act-mo" label="Gerente / Dono · movimentações + pedidos + 3 atalhos" width={520} height={900}>
           <BlockBox w={420}><ActivityBlock role="owner" /></BlockBox>
         </DCArtboard>
         <DCArtboard id="act-sales" label="Vendedor · últimas vendas próprias + Nova venda" width={520} height={420}>
@@ -132,12 +132,12 @@ function DashCanvas() {
 
       {/* ───── ESTADOS (Matriz) ───── */}
       <DCSection id="estados" title="05 · Estados (Matriz)" subtitle="Carregando: skeleton por bloco · erro de bloco isolado degrada sozinho (RN089) — “Não foi possível carregar.” + Tentar de novo">
-        <DCArtboard id="st-loading" label="Carregando · skeleton por bloco" width={CW} height={700}>
+        <DCArtboard id="st-loading" label="Carregando · skeleton por bloco" width={CW} height={900}>
           <DaFrame tone="load" name="Skeleton por bloco — cada um carrega isolado (RN089)" refLabel="Matriz">
             <DashSkeleton />
           </DaFrame>
         </DCArtboard>
-        <DCArtboard id="st-blockerr" label="Erro isolado · resumo de vendas falhou" width={CW} height={700}>
+        <DCArtboard id="st-blockerr" label="Erro isolado · resumo de vendas falhou" width={CW} height={900}>
           <DaFrame tone="err" name="Um bloco degrada sem derrubar os demais" refLabel="RN089 · §5">
             <DashErrorShell role="owner" />
           </DaFrame>
@@ -159,13 +159,13 @@ function DashCanvas() {
 
       {/* ───── MOBILE ───── */}
       <DCSection id="mobile" title="07 · Mobile (~390px)" subtitle="Coluna única — Atenção → Vendas → Atividade · adaptado por papel · onboarding empilhado">
-        <DCArtboard id="mob-owner" label="Dono · coluna única" width={CPHONE} height={900}>
+        <DCArtboard id="mob-owner" label="Dono · coluna única" width={CPHONE} height={1680}>
           <DashMobile role="owner" period="hoje" />
         </DCArtboard>
-        <DCArtboard id="mob-manager" label="Gerente · coluna única" width={CPHONE} height={860}>
+        <DCArtboard id="mob-manager" label="Gerente · coluna única" width={CPHONE} height={1580}>
           <DashMobile role="manager" period="7dias" />
         </DCArtboard>
-        <DCArtboard id="mob-sales" label="Vendedor · só o acionável" width={CPHONE} height={760}>
+        <DCArtboard id="mob-sales" label="Vendedor · só o acionável" width={CPHONE} height={800}>
           <DashMobile role="sales" />
         </DCArtboard>
         <DCArtboard id="mob-onb" label="Primeiro uso · onboarding" width={CPHONE} height={620}>
@@ -173,8 +173,8 @@ function DashCanvas() {
         </DCArtboard>
       </DCSection>
 
-    </DesignCanvas>
-  );
+    </DesignCanvas>);
+
 }
 
 window.DashCanvas = DashCanvas;

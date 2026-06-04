@@ -71,6 +71,10 @@ function ProductDetail({ variant = "default", state = "available", desk = false,
   const colorName = variant === "variation" ? "Verde-musgo" : "Areia";
   const colorSel = variant === "variation" ? 2 : 0;
 
+  const ctaBtn = soldOut
+    ? <SfBtn variant="outline" icon={STORE_I.whats}>Falar no WhatsApp</SfBtn>
+    : <SfBtn variant="primary" icon={STORE_I.cart}>Adicionar ao pedido</SfBtn>;
+
   const info = (
     <div>
       <h1 className="sf-detail-name">Vestido Linho Areia</h1>
@@ -97,11 +101,8 @@ function ProductDetail({ variant = "default", state = "available", desk = false,
         <SfStepper value={1} disabled={soldOut} />
       </div>
 
-      <div className="sf-detail-cta">
-        {soldOut
-          ? <SfBtn variant="outline" icon={STORE_I.whats}>Falar no WhatsApp</SfBtn>
-          : <SfBtn variant="primary" icon={STORE_I.cart}>Adicionar ao pedido</SfBtn>}
-      </div>
+      {/* desktop: o CTA vai para a barra fixa no rodapé (sf-detail-footbar) */}
+      {!desk && <div className="sf-detail-cta">{ctaBtn}</div>}
     </div>
   );
 
@@ -114,6 +115,12 @@ function ProductDetail({ variant = "default", state = "available", desk = false,
         <SfGallery selThumb={variant === "variation" ? 2 : 0} />
         {info}
       </div>
+      {desk && (
+        <div className="sf-detail-footbar">
+          <span className="sf-fb-price">{hidePrice ? "Consultar" : (soldOut ? "Esgotado" : "R$ 189,90")}</span>
+          {ctaBtn}
+        </div>
+      )}
     </div>
   );
 }
