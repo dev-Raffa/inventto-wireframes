@@ -963,7 +963,21 @@ No `lg`+: coluna centralizada `max-w-2xl`.
 **Passo 3 — Atributos e variações.**
 - `Switch` **"Este produto tem variações"** (desligado por default).
 - *Se desligado:* mensagem *"Produto sem variações. Avance para o resumo."*
-- *Se ligado:* N× atributos (nome + tipo `Select`: Texto · Cor · Número · Seleção — RN045 + valores como tags/chips, `Enter` para adicionar — RN044) + botão **"+ Adicionar atributo"**. Grade de variantes gerada automaticamente: rótulo + SKU da variante (obrigatório) + imagens opcionais + botão `X`.
+- *Se ligado:* N× atributos (nome + tipo `Select`: Texto · Cor · Número · Seleção — RN045 + valores como tags/chips, `Enter` para adicionar — RN044) + botão **"+ Adicionar atributo"**. Grade de variantes gerada automaticamente: rótulo + SKU da variante (obrigatório) + célula de imagens (descrita abaixo).
+
+Célula de imagens da variante (Passo 3).
+Exibe em linha os cards das imagens já associadas à variante, seguidos do botão gatilho para associar novas.
+Cards de imagens associadas. Cada imagem associada é representada por um button aspect-square rounded-md overflow-hidden:
+
+Card neutro (imagem não-principal): exibe a imagem em tela cheia. Ao hover/focus, sobrepõe dois controles no canto superior:
+
+Star (outline, aria-label="Tornar imagem principal") — define esta imagem como destaque da variante. Ao clicar, o card passa para o estado de imagem principal.
+X (aria-label="Desassociar imagem") — remove o vínculo entre a imagem e a variante. O card some da célula; a imagem retorna ao pool disponível no modal.
+
+
+Card de imagem principal: identificado pelo ícone Star preenchido (fill-warning text-warning) fixo no canto superior esquerdo, visível sem precisar de hover. Não exibe o botão X em hover — a imagem principal não pode ser desassociada diretamente; o usuário deve primeiro promover outra imagem e depois remover esta.
+
+Botão "Associar imagens". Após os cards, sempre como último elemento da célula: button aspect-square rounded-md border-2 border-dashed com ícone ImagePlus centralizado (aria-label="Associar imagens"). Visível somente enquanto houver imagens do produto ainda não associadas a esta variante. Ao clicar, abre o Modal 2.3.5.
 
 **Passo 4 — Resumo e confirmação.**
 - Visão somente leitura de tudo preenchido.

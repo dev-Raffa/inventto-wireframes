@@ -217,7 +217,7 @@ Antes do primeiro cliente real usar o sistema em produção, os itens abaixo —
 
 **RN002 — Mensagens de erro neutras na autenticação.** Falhas em login, redefinição de senha e demais fluxos não revelam se um e-mail está cadastrado. Mensagens são genéricas (ex: "credenciais inválidas").
 
-**RN003 — Verificação obrigatória de e-mail.** Conta recém-criada permanece "não verificada" até o usuário confirmar o e-mail pelo link enviado. Login com conta não verificada é rejeitado com instrução para verificar. O link tem validade de 24 horas, com reenvio disponível.
+**RN003 — Verificação obrigatória de e-mail.** Conta recém-criada permanece "não verificada" até o usuário informar o código OTP enviado por e-mail. Quando um login é tentado com conta não verificada, o sistema reenvia o código e transiciona o usuário para o step de verificação dentro do próprio fluxo, em vez de bloquear com erro. O código tem validade de 1 hora, com opção de reenvio.
 
 **RN004 — Sessão com rolling de 24 horas.** Enquanto há atividade, a sessão é renovada silenciosamente. Após 24 horas de inatividade, expira; na próxima requisição autenticada, o usuário é redirecionado ao login com toast informativo.
 
@@ -263,7 +263,7 @@ O cadastro não solicita slug — a identidade pública (slug, vitrine) é defin
 
 **Como** usuário recém-cadastrado, **eu quero** confirmar meu e-mail **para** ativar minha conta.
 
-**Comportamento esperado:** Após o cadastro, o usuário recebe e-mail com link único de verificação. Ao clicar, a conta é confirmada e ele segue para o login. Se o link expirou ou não chegou, há opção de reenviar (na tela pós-cadastro e na tela de login, ao detectar tentativa com conta não verificada).
+**Comportamento esperado:** Após o cadastro, o usuário recebe e-mail com código OTP de 6 dígitos. A verificação acontece como step embutido no próprio fluxo de origem — passo final do cadastro, passo 2 condicional do login (quando uma tentativa de acesso detecta conta não verificada) e passo 2 do primeiro acesso. O código tem validade de 1 hora, com opção de reenvio. Não há rota dedicada de verificação: a conta é confirmada ao validar o código no contexto do fluxo atual.
 
 **Regras aplicáveis:** RN002, RN003.
 

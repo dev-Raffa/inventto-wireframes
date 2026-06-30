@@ -20,14 +20,15 @@ Telas de entrada (pré-shell, públicas ou por token) e o casco que envolve todo
 
 ## 1.1. Acesso (Autenticação)
 
+> **Nota.** O **RF003** (verificação de e-mail) **não tem rota dedicada**: é realizado como *step embutido* em três fluxos — Passo 3 do Cadastro, Passo 2 condicional do Login (quando o e-mail está pendente, caso de cadastro abandonado) e Passo 2 do Primeiro acesso. A descrição visual do step compartilhado fica em `descricao-telas-v1.md`, seção 1.0.1.
+
 | Tela | Rota | Acesso | Realiza | Notas |
 |---|---|---|---|---|
-| Cadastro de conta | `/cadastro` | Público | RF001 · RN006, RN007, RN009 | Aceite de Termos; e-mail único; conta nasce Owner |
-| Login | `/login` | Público | RF002 · RN002, RN004, RN005 | Erro de credencial neutro; sessão rolling 24h; anti-força-bruta |
-| Verificação de e-mail | `/verificar-email` | Token | RF003 · RN003 | Estados: token válido / expirado |
+| Cadastro de conta (3 passos) | `/cadastro` | Público | RF001, RF003 · RN003, RN006, RN007, RN009 | Org → credenciais → verificação por código (OTP no Passo 3) |
+| Login (1 ou 2 passos) | `/login` | Público | RF002, RF003 · RN002, RN003, RN004, RN005 | Step 2 condicional (OTP) só se e-mail pendente; erro neutro; sessão rolling 24h |
 | Recuperar senha | `/recuperar-senha` | Público | RF004 · RN002 | Mensagem não revela se o e-mail existe |
 | Redefinir senha | `/redefinir-senha` | Token | RF004 · RN001, RN012, RN013 | Política de senha; link com validade e uso único |
-| Primeiro acesso (troca obrigatória) | `/primeiro-acesso` | Convidado | RF005 · RN015 | Bloqueia o acesso até a troca de senha |
+| Primeiro acesso (2 passos) | `/primeiro-acesso` | Convidado | RF005, RF003 · RN003, RN015 | Senha → verificação (OTP no Passo 2); bloqueia até concluir |
 
 ## 1.2. Shell do app (casco autenticado)
 
@@ -49,8 +50,8 @@ A experiência autenticada da equipe, dentro do shell, por módulo.
 
 | Tela | Rota | Acesso | Realiza | Notas |
 |---|---|---|---|---|
-| Configuração da organização | `/configuracoes` | Owner | RF007 · RN018, RN024, RN025 | Identidade fiscal, endereço (CEP), logo; edição confirmada |
-| — modal: criar nova organização | (modal) | Owner | RF006, RF009 · RN022, RN026 | Wizard; replicação de config só na criação |
+| Configuração da organização | `/organizacao` | Owner | RF007 · RN018, RN024, RN025 | Identidade fiscal, endereço (CEP), logo; edição confirmada |
+| Criar organização adicional | `/organizacao/nova` | Owner | RF006, RF009 · RN022, RN026 | Wizard; replicação de config só na criação |
 | — modal: desativar organização | (modal) | Owner | RF010 · RN027, RN028 | Não é tela; cancela pendentes; storefronts off |
 | — modal: excluir organização | (modal destrutivo) | Owner | RF011 · RN029, RN030 | Não é tela; digitar nome fantasia; slug em quarentena |
 
@@ -78,7 +79,7 @@ A experiência autenticada da equipe, dentro do shell, por módulo.
 | Tela | Rota | Acesso | Realiza | Notas |
 |---|---|---|---|---|
 | Histórico de movimentações | `/movimentacoes` | Owner, Manager (Sales: leitura sem custo) | RF023 · RN051, RN057 | Livro imutável; custo por papel |
-| Registrar movimentação | `/movimentacoes/nova` | Owner, Manager | RF022 · RN052, RN053, RN055 | Entrada/saída; motivo obrigatório; saldo ≥ 0 |
+| Registrar movimentação | `/movimentacoes/nova` | Owner, Manager | RF022 · RN052, RN053, RN055 | Página dedicada; multi-item (N produtos/variantes); motivo obrigatório; saldo ≥ 0 |
 
 ## 2.5. Módulo: Catálogos
 
