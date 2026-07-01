@@ -6,7 +6,7 @@
 
 Este é o **inventário de telas** da v1: a ponte entre a narrativa de jornada (UX, Parte II) e a especificação de tela detalhada que virá na fase de wireframe. O objetivo é enumerar e rastrear — *quais* telas existem, *onde*, para *quem*, e *qual* parte da especificação cada uma realiza —, não descrever cada tela em prosa.
 
-O mapa é organizado por **superfície** (a divisão de mais alto nível) e, dentro do app interno, por **módulo** (espelhando a especificação, para rastreabilidade). Varrendo a coluna *Realiza*, confirma-se que todos os 38 RFs aparecem em alguma tela (cobertura ao final). As referências (`RFxxx`, `RNxxx`) apontam para o Documento de Produto.
+O mapa é organizado por **superfície** (a divisão de mais alto nível) e, dentro do app interno, por **módulo** (espelhando a especificação, para rastreabilidade). Varrendo a coluna *Realiza*, confirma-se que todos os 39 RFs aparecem em alguma tela (cobertura ao final). As referências (`RFxxx`, `RNxxx`) apontam para o Documento de Produto.
 
 **Convenção de granularidade.** "Tela" = uma rota navegável (um wizard multi-step conta como uma tela). Modal, painel lateral, toast e estados (carregando, vazio, sucesso, erro) **não** são telas próprias — são anotados na coluna *Notas* e detalhados depois na matriz de estados. Linhas iniciadas por "—" são esses itens **não-tela**, listados para deixar a regra explícita.
 
@@ -69,7 +69,8 @@ A experiência autenticada da equipe, dentro do shell, por módulo.
 |---|---|---|---|---|
 | Lista / busca de produtos | `/produtos` | Owner, Manager (Sales: leitura) | RF017 · RN057 | Custos ocultos do Sales; vazio conduz |
 | Cadastro de produto (wizard) | `/produtos/novo` | Owner, Manager | RF016 · RN038, RN039, RN041 | Multi-step; SKU único; estoque inicial zero |
-| Edição de produto | `/produtos/:id` | Owner, Manager | RF018 · RN044 | SKU imutável quando há histórico |
+| Detalhe de produto (leitura) | `/produtos/:id` | Owner, Manager, Sales | RF039 · RN017, RN043, RN050 | Ficha somente-leitura; única tela de produto acessível ao Sales além da lista |
+| Edição de produto | `/produtos/:id/editar` | Owner, Manager | RF018 · RN044 | SKU imutável quando há histórico |
 | — modal: inativar produto | (modal) | Owner, Manager | RF019 · RN045 | Não é tela; soft delete |
 | Categorias | `/produtos/categorias` | Owner, Manager | RF020 · RN046 | Inline; retenção de estrutura |
 | Importar produtos (entre orgs) | `/produtos/importar` | Owner, Manager | RF021 · RN047, RN048 | Isolamento comercial; sem duplicar |
@@ -140,10 +141,10 @@ O canal online visto pelo cliente final: externo, no celular, sem login.
 
 ## Cobertura dos RFs
 
-Os 38 RFs aparecem em pelo menos uma tela. Distribuição por superfície/módulo:
+Os 39 RFs aparecem em pelo menos uma tela. Distribuição por superfície/módulo:
 
 - **Acesso & Shell:** RF001–RF005 (acesso), RF008, RF015, RF035, RF002 (shell).
-- **App interno:** RF006, RF007, RF009, RF010, RF011 (Organização); RF012, RF013, RF014 (Equipe); RF016–RF021 (Produtos); RF022, RF023 (Movimentações); RF024, RF025 (Catálogos); RF026, RF027 (PDV); RF028 (Storefront/config); RF033, RF034 (Pedidos/painel); RF036, RF037, RF038 (Dashboard).
+- **App interno:** RF006, RF007, RF009, RF010, RF011 (Organização); RF012, RF013, RF014 (Equipe); RF016–RF021, RF039 (Produtos); RF022, RF023 (Movimentações); RF024, RF025 (Catálogos); RF026, RF027 (PDV); RF028 (Storefront/config); RF033, RF034 (Pedidos/painel); RF036, RF037, RF038 (Dashboard).
 - **Vitrine pública:** RF029, RF030, RF031, RF032.
 
 ## Pendências sinalizadas (⚑)

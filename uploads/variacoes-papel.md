@@ -75,11 +75,14 @@ Gestão de equipe é **exclusiva do Owner** (matriz 3.1; atores do Módulo 3: "M
 | Tela | Sales | Manager | Owner |
 |---|---|---|---|
 | Lista / busca de produtos | leitura (sem custo) | ✓ | ✓ |
+| Detalhe de produto | leitura (sem custo) | ✓ | ✓ |
 | Cadastro de produto | — | ✓ | ✓ |
 | Edição de produto | — | ✓ | ✓ |
 | Inativar produto | — | ✓ | ✓ |
 | Categorias | — | ✓ | ✓ |
 | Importar produtos entre unidades | — | ✓ | ✓ |
+
+*O detalhe é a única tela de produto além da lista que o Sales acessa — não há cadastro, edição nem inativação para esse papel (RF039).*
 
 ### Movimentações de estoque
 

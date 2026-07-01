@@ -7,6 +7,9 @@ const {
 const {
   PdWizardShell, PdWizard, PdInativarDialog, PdAssociarImagensDialog, PdImageCard, PdSubScreenShell, PdImportMobile, PdProgress,
 } = window.PRODF;
+const {
+  PdDetailShell, PdDetail, PdDetailLoading, PdDetail404, PdDetailMobile,
+} = window.PRODD;
 
 const PW = 1200, PPHONE = 390;
 
@@ -128,8 +131,42 @@ function ProdCanvas() {
         </DCArtboard>
       </DCSection>
 
+      {/* ───── DETALHE DE PRODUTO (2.3.3) ───── */}
+      <DCSection id="detalhe" title="02 · Detalhe de produto (leitura)" subtitle="/produtos/:id · galeria + identificação + seletor de variante + estoque + resumo da grade + ações condicionais por papel — RF039, RN050, RN057">
+        <DCArtboard id="det-simple" label="Detalhe · produto simples · Desktop · Owner/Manager" width={PW} height={880}>
+          <PdDetailShell id="vestido" role="owner" />
+        </DCArtboard>
+        <DCArtboard id="det-var" label="Detalhe · produto com variações (seletor + resumo da grade)" width={PW} height={880}>
+          <PdDetailShell id="camisa" role="owner" />
+        </DCArtboard>
+        <DCArtboard id="det-sales" label="Recorte por papel · Vendedor — sem ações, sem custo médio (RN057)" width={PW} height={860}>
+          <Frame tone="empty" name="Sales: ficha de leitura · sem barra de ações nem custo" refLabel="RF015 · RN057" center={false} pad={0}>
+            <PdDetailShell id="camisa" role="sales" />
+          </Frame>
+        </DCArtboard>
+        <DCArtboard id="det-loading" label="Carregando (skeleton)" width={940} height={720}>
+          <Frame tone="load" name="Abre em skeleton · galeria + blocos de texto" refLabel="Matriz" center={false}>
+            <PdDetailLoading />
+          </Frame>
+        </DCArtboard>
+        <DCArtboard id="det-404" label="Produto não encontrado (404 amigável)" width={940} height={520}>
+          <Frame tone="empty" name="Retorno para /produtos" refLabel="Matriz" center={false}>
+            <PdDetail404 />
+          </Frame>
+        </DCArtboard>
+        <DCArtboard id="det-mob-var" label="Mobile · com variações" width={PPHONE} height={1320}>
+          <PdDetailMobile id="camisa" role="owner" />
+        </DCArtboard>
+        <DCArtboard id="det-mob-simple" label="Mobile · produto simples" width={PPHONE} height={1290}>
+          <PdDetailMobile id="vestido" role="owner" />
+        </DCArtboard>
+        <DCArtboard id="det-mob-sales" label="Mobile · Vendedor (sem ações / sem custo)" width={PPHONE} height={1170}>
+          <PdDetailMobile id="camisa" role="sales" />
+        </DCArtboard>
+      </DCSection>
+
       {/* ───── ESTADOS DA TELA ───── */}
-      <DCSection id="estados" title="02 · Estados da lista" subtitle="Carregando · primeira vez (vazio) · filtro sem resultado · recorte Sales — Matriz §2.3">
+      <DCSection id="estados" title="03 · Estados da lista" subtitle="Carregando · primeira vez (vazio) · filtro sem resultado · recorte Sales — Matriz §2.3">
         <DCArtboard id="st-loading" label="Carregando (skeleton)" width={920} height={600}>
           <Frame tone="load" name="Abre em skeleton de tabela" refLabel="Matriz" center={false}>
             <PdListLoading />
@@ -156,7 +193,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── WIZARD DE CADASTRO ───── */}
-      <DCSection id="cadastro" title="03 · Cadastro de produto (wizard 3–4 passos)" subtitle="/produtos/novo · Informações (+ switch de variações) → Imagens → [Variações] → Resumo — RF016, RN041–RN045">
+      <DCSection id="cadastro" title="04 · Cadastro de produto (wizard 3–4 passos)" subtitle="/produtos/novo · Informações (+ switch de variações) → Imagens → [Variações] → Resumo — RF016, RN041–RN045">
         <DCArtboard id="wiz-1" label="Passo 1 · Informações básicas (sem variações)" width={PW} height={980}>
           <PdWizardShell mode="create" step={1} variations={false} />
         </DCArtboard>
@@ -220,7 +257,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── EDIÇÃO & INATIVAR ───── */}
-      <DCSection id="edicao" title="04 · Edição & inativação" subtitle="/produtos/:id reusa o wizard · SKU travado se há movimentações · modal de inativar — RF018, RF019, RN046">
+      <DCSection id="edicao" title="05 · Edição & inativação" subtitle="/produtos/:id reusa o wizard · SKU travado se há movimentações · modal de inativar — RF018, RF019, RN046">
         <DCArtboard id="edit-1" label="Editar · Passo 1 · SKU readonly (há movimentações)" width={820} height={965}>
           <Frame tone="empty" name="SKU travado + “Inativar produto” no rodapé" refLabel="RF018 · RN041" center={false}>
             <PdWizard mode="edit" step={1} />
@@ -239,7 +276,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── COMPONENTE: CARD DE IMAGEM ───── */}
-      <DCSection id="card-image" title="05 · Componente — Card de imagem" subtitle="Estados do card de imagem na associação à variante / capa do produto — RF010, RN044">
+      <DCSection id="card-image" title="06 · Componente — Card de imagem" subtitle="Estados do card de imagem na associação à variante / capa do produto — RF010, RN044">
         <DCArtboard id="ci-states" label="4 estados · destaque/normal × repouso/hover" width={760} height={300}>
           <Frame tone="empty" name="Estrela = define a capa · X = desassociar" refLabel="RF010" center>
             <div style={{ display: "flex", gap: 40, alignItems: "flex-start" }}>
@@ -263,7 +300,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── ASSOCIAR IMAGENS À VARIAÇÃO (2.3.5) ───── */}
-      <DCSection id="assoc-imagens" title="06 · Modal — Associar imagens à variação (2.3.5)" subtitle="Acionado pelo botão ImagePlus na célula de imagens da variante (Passo 3 / Edição) — RF010, RF016, RN044, RN045">
+      <DCSection id="assoc-imagens" title="07 · Modal — Associar imagens à variação (2.3.5)" subtitle="Acionado pelo botão ImagePlus na célula de imagens da variante (Passo 3 / Edição) — RF010, RF016, RN044, RN045">
         <DCArtboard id="assoc-base" label="Inicial · nada selecionado (Confirmar desabilitado)" width={820} height={700}>
           <Frame tone="empty" name="Pool de imagens não associadas · grid 5 col" refLabel="RF010" center>
             <PdAssociarImagensDialog scenario="base" />
@@ -287,7 +324,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── IMPORTAR ───── */}
-      <DCSection id="importar" title="07 · Importar produtos" subtitle="/produtos/importar · copiar de outra unidade do tenant — RF021, RN048, RN049">
+      <DCSection id="importar" title="08 · Importar produtos" subtitle="/produtos/importar · copiar de outra unidade do tenant — RF021, RN048, RN049">
         <DCArtboard id="imp-base" label="Lista de origem · seleção" width={PW} height={780}>
           <Frame tone="empty" name="Checkbox por item · “Já importado” travado" refLabel="RF021 · RN049" center={false} pad={0}>
             <PdSubScreenShell screen="importar" scenario="base" />
@@ -311,7 +348,7 @@ function ProdCanvas() {
       </DCSection>
 
       {/* ───── MOBILE ───── */}
-      <DCSection id="mobile" title="08 · Mobile (~390px)" subtitle="Lista em cards · resumo de variantes expansível · wizard com Progress">
+      <DCSection id="mobile" title="09 · Mobile (~390px)" subtitle="Lista em cards · resumo de variantes expansível · wizard com Progress">
         <DCArtboard id="mob-list" label="Lista · cards (4:3)" width={PPHONE} height={2710}>
           <PdListMobile />
         </DCArtboard>
